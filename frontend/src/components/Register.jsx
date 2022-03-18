@@ -30,11 +30,12 @@ const Register = () => {
   }
 
   return (
-    <>
+    <section className="card">
+      <h2>Cadastro</h2>
+
       <input
         type="text"
         placeholder="Nome"
-        className="m-4 px-2 py-1 bg-gray-100 rounded border border-gray-500"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
@@ -42,7 +43,6 @@ const Register = () => {
       <input
         type="text"
         placeholder="Perfil"
-        className="m-4 px-2 py-1 bg-gray-100 rounded border border-gray-500"
         value={role}
         onChange={(e) => setRole(e.target.value)}
       />
@@ -50,7 +50,6 @@ const Register = () => {
       <input
         type="text"
         placeholder="Tipo de Documento"
-        className="m-4 px-2 py-1 bg-gray-100 rounded border border-gray-500"
         value={docType}
         onChange={(e) => setDocType(e.target.value)}
       />
@@ -58,18 +57,15 @@ const Register = () => {
       <input
         type="text"
         placeholder="Número de Documento"
-        className="m-4 px-2 py-1 bg-gray-100 rounded border border-gray-500"
+        className="last"
         value={doc}
         onChange={(e) => setDoc(e.target.value)}
       />
 
-      <button
-        onClick={handleRegistration}
-        className="rounded bg-green-600 px-4 py-1 text-white font-bold"
-      >
+      <button onClick={handleRegistration}>
         Cadastrar
       </button>
-    </>
+    </section>
   )
 }
 

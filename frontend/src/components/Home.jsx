@@ -13,36 +13,27 @@ const Home = () => {
   }
 
   return (
-    <>
-      <h1>Home</h1>
+    <section className='card'>
+      <h2>Menu</h2>
 
-      <button
-        onClick={makeRequest}
-        className="px-4 py-1 rounded bg-green-600 text-white font-bold"
-      >
+      <button onClick={makeRequest}>
         Get message
       </button>
 
       <p>{msg}</p>
 
       <p>
-        <Link
-          to="/register"
-          className="text-blue-600 underline"
-        >
+        <Link to="/register">
           Cadastre alguém
         </Link>
       </p>
 
       <p>
-        <Link
-          to="/user"
-          className="text-blue-600 underline"
-        >
+        <Link to="/user">
           Encontre alguém
         </Link>
       </p>
-    </>
+    </section>
   )
 }
 

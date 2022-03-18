@@ -41,7 +41,10 @@ const Login = () => {
   }
 
   return (
-    <>
+    <section className="card">
+
+      <h2>Login</h2>
+
       <input
         type="text"
         value={username}
@@ -49,7 +52,6 @@ const Login = () => {
         placeholder="Username"
         autoComplete="off"
         required
-        className="m-4 px-2 py-1 bg-gray-100 rounded border border-gray-500"
       />
 
       <input
@@ -58,16 +60,13 @@ const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Senha"
         required
-        className="m-4 px-2 py-1 bg-gray-100 rounded border border-gray-500"
+        className="last"
       />
 
-      <button
-        onClick={handleLogin}
-        className="rounded bg-green-600 px-4 py-1 text-white font-bold"
-      >
+      <button onClick={handleLogin}>
         Login
       </button>
-    </>
+    </section>
   )
 }
 

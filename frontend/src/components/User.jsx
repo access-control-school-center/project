@@ -54,13 +54,9 @@ const User = () => {
         value={uuid}
         onChange={(e) => setUuid(e.target.value)}
         placeholder="ID do usuário"
-        className="m-4 px-2 py-1 bg-gray-100 rounded border border-gray-500"
       />
 
-      <button
-        className="px-4 py-1 rounded bg-green-600 text-white font-bold"
-        onClick={fetchUser}
-      >
+      <button onClick={fetchUser}>
         Buscar
       </button>
 

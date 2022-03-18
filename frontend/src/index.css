@@ -1,3 +1,47 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+h2 {
+  @apply font-bold text-2xl my-4;
+}
+
+.card {
+  @apply m-4 p-4 h-fit;
+  @apply flex flex-col;
+  @apply rounded shadow-lg border border-gray-100;
+}
+
+input {
+  @apply mt-6 p-2 rounded border border-gray-500;
+  @apply bg-gray-100;
+}
+
+input.last {
+  @apply mb-6;
+}
+
+button {
+  @apply rounded bg-green-600 px-4 py-2;
+  @apply text-white font-bold;
+}
+
+a {
+  @apply text-blue-600 underline;
+}
+
+p {
+  @apply my-1;
+}
+
+@screen md {
+  .card {
+    @apply w-1/2 mx-auto;
+  }
+}
+
+@screen lg {
+  .card {
+    @apply w-1/4;
+  }
+}
