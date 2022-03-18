@@ -2,12 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+
+.page {
+  @apply px-4 py-2;
+  @apply flex flex-col;
+}
+
+/* .page > .card {
+  @apply my-auto;
+} */
+
+h1 {
+  @apply font-bold text-4xl my-6;
+}
+
 h2 {
   @apply font-bold text-2xl my-4;
 }
 
 .card {
-  @apply m-4 p-4 h-fit;
+  @apply p-4 h-fit;
   @apply flex flex-col;
   @apply rounded shadow-lg border border-gray-100;
 }

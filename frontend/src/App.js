@@ -6,20 +6,23 @@ import Home from './components/Home'
 import Register from './components/Register';
 import User from './components/User';
 import AuthRequired from './components/AuthRequired';
+import Layout from './components/Layout';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route element={<Layout />} >
 
-        <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login />} />
 
-        <Route element={<AuthRequired />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/user" element={<User />} />
+          <Route element={<AuthRequired />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/user" element={<User />} />
+          </Route>
+
         </Route>
-
       </Routes>
     </BrowserRouter>
   );
