@@ -1,0 +1,1 @@
+rootProject.name = "br.usp.ip.ceip.backend"
