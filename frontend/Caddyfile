@@ -1,0 +1,4 @@
+:3000
+
+root * ./build
+file_server
