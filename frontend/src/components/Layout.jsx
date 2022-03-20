@@ -1,9 +1,11 @@
 import { Outlet } from 'react-router-dom'
 
+import Navbar from './Navbar'
+
 const Layout = () => {
   return (
     <main className="page">
-      <h1>CEIP - Acesso</h1>
+      <Navbar />
 
       <Outlet />
 

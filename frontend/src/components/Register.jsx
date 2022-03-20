@@ -30,7 +30,7 @@ const Register = () => {
   }
 
   return (
-    <section className="card">
+    <section className="card -mt-10">
       <h2>Cadastro</h2>
 
       <input

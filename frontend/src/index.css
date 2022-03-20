@@ -4,13 +4,14 @@
 
 
 .page {
-  @apply px-4 py-2;
+  @apply px-4 py-2 h-screen;
   @apply flex flex-col;
-}
 
-/* .page > .card {
-  @apply my-auto;
-} */
+  background-image: url("../assets/ceip-facade.jpg");
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
 
 h1 {
   @apply font-bold text-4xl my-6;
@@ -23,7 +24,8 @@ h2 {
 .card {
   @apply p-4 h-fit;
   @apply flex flex-col;
-  @apply rounded shadow-lg border border-gray-100;
+  @apply rounded-2xl shadow-lg shadow-white border border-gray-100;
+  @apply bg-white;
 }
 
 input {
@@ -48,6 +50,21 @@ p {
   @apply my-1;
 }
 
+nav {
+  @apply -ml-4 -mt-2 px-6 mb-32 w-screen;
+  @apply flex flex-row justify-between items-center;
+  @apply bg-white;
+}
+
+nav > ul {
+  @apply flex flex-row;
+}
+
+nav li {
+  @apply font-bold text-sm;
+  @apply mx-2;
+}
+
 @screen md {
   .card {
     @apply w-1/2 mx-auto;
@@ -55,6 +72,10 @@ p {
 }
 
 @screen lg {
+  .page {
+    background-size: 100%;
+  }
+
   .card {
     @apply w-1/4;
   }
