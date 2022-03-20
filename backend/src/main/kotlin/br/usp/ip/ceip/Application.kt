@@ -2,6 +2,7 @@ package br.usp.ip.ceip
 
 import br.usp.ip.ceip.db.conn
 import br.usp.ip.ceip.domain.Person
+import br.usp.ip.ceip.domain.Role
 import br.usp.ip.ceip.domain.security.TokenManager
 import io.ktor.application.*
 import br.usp.ip.ceip.plugins.*
@@ -11,6 +12,21 @@ fun main(args: Array<String>) {
 
 //    val lastCount = getLastPersonCount()
 //    Person.n = lastCount
+
+    val person1 = Person(
+        name = "Fulano",
+        Role.Employee
+    )
+
+    person1.addCredential("1234", "senhasecreta")
+
+    val person2 = Person(
+        name = "Beltrano",
+        Role.UserOrCompanion
+    )
+
+    println(person1)
+    println(person2)
 
     io.ktor.server.netty.EngineMain.main(args)
 }
