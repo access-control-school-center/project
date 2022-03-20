@@ -1,12 +1,16 @@
 package br.usp.ip.ceip
 
 import br.usp.ip.ceip.db.conn
+import br.usp.ip.ceip.domain.Person
 import br.usp.ip.ceip.domain.security.TokenManager
 import io.ktor.application.*
 import br.usp.ip.ceip.plugins.*
 
 fun main(args: Array<String>) {
     conn()
+
+//    val lastCount = getLastPersonCount()
+//    Person.n = lastCount
 
     io.ktor.server.netty.EngineMain.main(args)
 }
