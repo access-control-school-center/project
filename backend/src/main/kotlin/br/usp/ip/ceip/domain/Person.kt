@@ -65,13 +65,13 @@ class Person(
     lateinit var lastShotDate: Date
     lateinit var credential: Credential
     lateinit var responsible: Responsible
-    lateinit var services: Set<String>
+    lateinit var services: MutableSet<String>
 
     init {
         id = Person.generateNextID()
 
         if (role == Role.UserOrCompanion)
-            services = emptySet()
+            services = mutableSetOf<String>()
     }
 
     fun addCredential(nusp: String, password: String): Credential? {
@@ -79,6 +79,20 @@ class Person(
 
         credential = Credential(nusp, password)
         return credential
+    }
+
+    fun addResponsible(name: String, service: String): Responsible? {
+        if (role != Role.Volunteer) return null
+
+        responsible = Responsible(name, service)
+        return responsible
+    }
+
+    fun addService(service: String): MutableSet<String>? {
+        if (role != Role.UserOrCompanion) return null
+
+        if (service.isNotEmpty()) services.add(service)
+        return services
     }
 
     override fun toString(): String {
