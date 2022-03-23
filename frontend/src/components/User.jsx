@@ -2,24 +2,19 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
+import PersonInfo from "./PersonInfo"
 
 const User = () => {
   const { id } = useParams()
-
-  const parseDate = ({ day, month, year }) => {
-    return `${day}/${month}/${year}`
-  }
 
   const axios = useAxiosPrivate()
 
   const [user, setUser] = useState({
     id: '',
     name: '',
-    docType: '',
-    doc: '',
+    document: {},
     role: '',
-    lastShotDate: '',
-    username: '',
+    lastShotDate: {},
   })
 
   const [errMsg, setErrMsg] = useState('')
@@ -27,40 +22,33 @@ const User = () => {
   const fetchUser = async () => {
     try {
       const response = await axios.get(`/users/${id}`)
-
-      if (!response?.data?.user) {
-        setErrMsg(`User ${id} not found`)
-        return
-      }
-
-      const user = response.data.user
-
-      setUser({
-        id,
-        name: user.name,
-        docType: user.document.type,
-        doc: user.document.value,
-        role: user.role,
-        lastShotDate: parseDate(user.lastShotDate),
-        username: user.credentials.username,
-      })
+      setUser({ id, ...response.data })
     } catch (err) {
-      setErrMsg('Unauthorized')
+      setErrMsg('User not found or system not available')
     }
   }
 
   useEffect(() => fetchUser(), [])
 
   return (
-    <>
-      {user.id && Object.keys(user).map((attr) => {
-        return (<p key={attr}>
-          <span className="font-bold">{attr}</span> - {user[attr]}
-        </p>)
-      })}
-
-      {errMsg && <p>{errMsg}</p>}
-    </>
+    <section className="card">
+      {
+        errMsg
+          ? (<p>{errMsg}</p>)
+          : (
+            <PersonInfo
+              id={user.id}
+              name={user.name}
+              doc={user.document}
+              lastShotDate={user.lastShotDate}
+              role={user.role}
+              credential={user.credential}
+              responsible={user.responsible}
+              services={user.services}
+            />
+          )
+      }
+    </section>
   )
 }
 

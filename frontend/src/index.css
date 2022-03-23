@@ -97,6 +97,23 @@ li {
   @apply my-2;
 }
 
+.pill {
+  @apply px-3 py-1.5 w-fit rounded-full;
+  @apply text-white font-bold text-center text-xs;
+}
+
+.pill.user {
+  @apply bg-green-600;
+}
+
+.pill.employee {
+  @apply bg-red-600;
+}
+
+.pill.volunteer {
+  @apply bg-blue-600;
+}
+
 @screen md {
   .card {
     @apply w-1/2 mx-auto;
