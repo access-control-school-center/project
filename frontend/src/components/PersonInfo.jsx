@@ -1,3 +1,5 @@
+import usePerson from '../hooks/usePerson'
+
 const parseDate = ({ day, month, year }) => {
   return `${day}/${month}/${year}`
 }
@@ -14,7 +16,7 @@ const translateRole = (role) => {
     case EMPLOYEE:
       return "Funcionário(a)"
 
-    case VOLUNTEER:
+    default:
       return "Voluntário(a)"
   }
 }
@@ -25,7 +27,11 @@ const roleStyle = (role) => {
   return role.toLowerCase()
 }
 
-const PersonInfo = ({ id, name, doc, lastShotDate, role, services, credential, responsible }) => {
+const PersonInfo = () => {
+  const { person } = usePerson()
+
+  const { name, role, id, document: doc, services, lastShotDate, responsible, credential } = person
+
   return (<>
     <h2>{name}</h2>
 

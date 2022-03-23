@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
+import usePerson from '../hooks/usePerson'
 
 const CPF = "CPF",
   ID_CEIP = "ID-CEIP",
@@ -11,6 +12,9 @@ const CPF = "CPF",
 
 const Search = () => {
   const axios = useAxiosPrivate()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { setPerson } = usePerson()
 
   const possibleFilters = [
     CPF, ID_CEIP, NOME, N_USP, RG
@@ -24,12 +28,6 @@ const Search = () => {
 
   const buildParams = () => {
     switch (selectedFilter) {
-      case CPF:
-        return {
-          "document.type": "CPF",
-          "document.value": given
-        }
-
       case ID_CEIP:
         return { "id": given }
 
@@ -42,6 +40,12 @@ const Search = () => {
       case RG:
         return {
           "document.type": "RG",
+          "document.value": given
+        }
+
+      default:
+        return {
+          "document.type": "CPF",
           "document.value": given
         }
     }
@@ -57,7 +61,7 @@ const Search = () => {
         params: buildParams()
       })
 
-      setPeople(response.data.map(({ id, name }) => ({ id, name })))
+      setPeople(response.data)
     } catch (err) {
       console.log(err)
       setPeople([])
@@ -67,12 +71,21 @@ const Search = () => {
   }
 
   useEffect(() => {
-    setEmptyPeopleList(people.length == 0)
+    setEmptyPeopleList(people.length === 0)
   }, [people])
 
   useEffect(() => {
-    setDisabled(given.length == 0)
+    setDisabled(given.length === 0)
   }, [given])
+
+  const handleNavigation = (id) => {
+    return () => {
+      const i = people.findIndex((person) => person.id === id)
+      setPerson(people[i])
+
+      navigate("/user", { from: location })
+    }
+  }
 
   return (
     <section className="card">
@@ -116,7 +129,7 @@ const Search = () => {
           <ul>
             {people.map(({ id, name }) => (
               <li key={id}>
-                [{id}] <Link to={`/user/${id}`}>{name}</Link>
+                [{id}] <span className="underline text-blue-600" onClick={handleNavigation(id)}>{name}</span>
               </li>
             ))}
           </ul>
