@@ -51,18 +51,23 @@ h3 {
   @apply text-white bg-blue-600;
 }
 
-input {
+input,select {
   @apply mt-6 p-2 rounded border border-gray-500;
   @apply bg-gray-100;
 }
 
-input.last {
+input.last, select.last {
   @apply mb-6;
 }
 
 button {
   @apply rounded bg-green-600 px-4 py-2;
   @apply text-white font-bold;
+}
+
+button.disabled {
+  @apply bg-gray-200;
+  @apply text-gray-600 font-normal;
 }
 
 a {
