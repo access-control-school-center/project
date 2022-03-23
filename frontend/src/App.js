@@ -7,6 +7,7 @@ import Register from './components/Register';
 import User from './components/User';
 import AuthRequired from './components/AuthRequired';
 import Layout from './components/Layout';
+import Search from './components/Search';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="/user" element={<User />} />
+            <Route path="/search" element={<Search />} />
           </Route>
 
         </Route>
