@@ -28,7 +28,7 @@ h3 {
 .card {
   @apply p-4 h-fit;
   @apply flex flex-col;
-  @apply rounded-2xl shadow-lg shadow-white border border-gray-100;
+  @apply rounded-2xl border border-gray-400;
   @apply bg-white;
 }
 
