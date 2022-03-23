@@ -1,7 +1,11 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
 
 const User = () => {
+  const { id } = useParams()
+
   const parseDate = ({ day, month, year }) => {
     return `${day}/${month}/${year}`
   }
@@ -18,23 +22,21 @@ const User = () => {
     username: '',
   })
 
-  const [uuid, setUuid] = useState('')
-
   const [errMsg, setErrMsg] = useState('')
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(`/users/${uuid}`)
+      const response = await axios.get(`/users/${id}`)
 
       if (!response?.data?.user) {
-        setErrMsg(`User ${uuid} not found`)
+        setErrMsg(`User ${id} not found`)
         return
       }
 
       const user = response.data.user
 
       setUser({
-        id: uuid,
+        id,
         name: user.name,
         docType: user.document.type,
         doc: user.document.value,
@@ -47,19 +49,10 @@ const User = () => {
     }
   }
 
+  useEffect(() => fetchUser(), [])
+
   return (
     <>
-      <input
-        type="text"
-        value={uuid}
-        onChange={(e) => setUuid(e.target.value)}
-        placeholder="ID do usuário"
-      />
-
-      <button onClick={fetchUser}>
-        Buscar
-      </button>
-
       {user.id && Object.keys(user).map((attr) => {
         return (<p key={attr}>
           <span className="font-bold">{attr}</span> - {user[attr]}
