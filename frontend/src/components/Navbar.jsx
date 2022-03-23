@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 
 import useAuth from '../hooks/useAuth'
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
@@ -35,6 +35,24 @@ const Navbar = () => {
       {isLogged &&
         <ul>
           <li onClick={logout}>Sair</li>
+
+          {location.pathname !== "/" &&
+            <li>
+              <Link to="/">Início</Link>
+            </li>
+          }
+
+          {location.pathname !== "/register" && location.pathname !== "/" &&
+            <li>
+              <Link to="/register">Cadastro</Link>
+            </li>
+          }
+
+          {location.pathname !== "/search" && location.pathname !== "/" &&
+            <li>
+              <Link to="/search">Busca</Link>
+            </li>
+          }
         </ul>
       }
 
