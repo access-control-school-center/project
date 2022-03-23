@@ -21,11 +21,34 @@ h2 {
   @apply font-bold text-2xl my-4;
 }
 
+h3 {
+  @apply font-bold text-lg my-2;
+}
+
 .card {
   @apply p-4 h-fit;
   @apply flex flex-col;
   @apply rounded-2xl shadow-lg shadow-white border border-gray-100;
   @apply bg-white;
+}
+
+.banner {
+  @apply w-full p-4 h-fit;
+  @apply flex flex-col;
+}
+
+.banner > .card {
+  @apply my-2;
+}
+
+.banner > .card a {
+  @apply self-center;
+  @apply mt-4 mb-2;
+  @apply capitalize font-bold;
+}
+
+.banner > .card a:hover {
+  @apply text-white bg-blue-600;
 }
 
 input {
@@ -69,6 +92,11 @@ nav li {
   .card {
     @apply w-1/2 mx-auto;
   }
+
+  .banner {
+    @apply flex-row flex-wrap;
+    @apply py-2 px-2;
+  }
 }
 
 @screen lg {
@@ -78,5 +106,13 @@ nav li {
 
   .card {
     @apply w-1/4;
+  }
+
+  .banner {
+    @apply justify-center;
+  }
+
+  .banner > .card {
+    @apply mx-4;
   }
 }

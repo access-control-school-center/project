@@ -1,38 +1,23 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import useAxiosPrivate from '../hooks/useAxiosPrivate'
+
+import BannerCard from './BannerCard'
 
 const Home = () => {
-  const axios = useAxiosPrivate()
-
-  const [msg, setMsg] = useState('')
-
-  const makeRequest = async () => {
-    const response = await axios.get("/foo")
-    setMsg(response?.data?.msg)
-  }
-
   return (
-    <section className='card'>
-      <h2>Menu</h2>
+    <section className="banner">
+      <BannerCard
+        title="Cadastro"
+        description="Crie um novo cadastro no sistema uma nova pessoa, seja um Usuário, Acompanhante, Funcionário ou Voluntário"
+        buttonLabel="Ir para cadastro"
+        to="/register"
+      />
 
-      <button onClick={makeRequest}>
-        Get message
-      </button>
-
-      <p>{msg}</p>
-
-      <p>
-        <Link to="/register">
-          Cadastre alguém
-        </Link>
-      </p>
-
-      <p>
-        <Link to="/user">
-          Encontre alguém
-        </Link>
-      </p>
+      <BannerCard
+        title="Busca"
+        description="Encontre uma pessoa cadastrada, tanto para imprimir sua etiqueta, quanto para resolver dados pendentes."
+        buttonLabel="Ir para busca"
+        to="/search"
+      />
     </section>
   )
 }
