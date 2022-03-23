@@ -88,6 +88,10 @@ nav li {
   @apply mx-2;
 }
 
+li {
+  @apply my-2;
+}
+
 @screen md {
   .card {
     @apply w-1/2 mx-auto;
