@@ -1,32 +1,16 @@
 package br.usp.ip.ceip
 
-import br.usp.ip.ceip.db.conn
-import br.usp.ip.ceip.domain.Person
-import br.usp.ip.ceip.domain.Role
+import br.usp.ip.ceip.api.AuthController
+import br.usp.ip.ceip.db.CredentialRepositoryImpl
 import br.usp.ip.ceip.domain.security.TokenManager
+import br.usp.ip.ceip.plugins.configureHTTP
+import br.usp.ip.ceip.plugins.configureRouting
+import br.usp.ip.ceip.plugins.configureSecurity
+import br.usp.ip.ceip.plugins.configureSerialization
 import io.ktor.application.*
-import br.usp.ip.ceip.plugins.*
 
 fun main(args: Array<String>) {
-    conn()
-
-//    val lastCount = getLastPersonCount()
-//    Person.n = lastCount
-
-    val person1 = Person(
-        name = "Fulano",
-        Role.Employee
-    )
-
-    person1.addCredential("1234", "senhasecreta")
-
-    val person2 = Person(
-        name = "Beltrano",
-        Role.UserOrCompanion
-    )
-
-    println(person1)
-    println(person2)
+//    conn()
 
     io.ktor.server.netty.EngineMain.main(args)
 }
@@ -41,8 +25,12 @@ fun Application.module() {
 
     val tokenManager = TokenManager(issuer, audience, realm, accessSecret, refreshSecret)
 
+    val repo = CredentialRepositoryImpl()
+
+    val authController = AuthController(tokenManager, repo)
+
     configureSecurity(tokenManager)
     configureSerialization()
     configureHTTP(frontendUrl = audience)
-    configureRouting(tokenManager)
+    configureRouting(authController)
 }
