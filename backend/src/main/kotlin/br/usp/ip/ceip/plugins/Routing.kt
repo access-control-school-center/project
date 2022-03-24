@@ -1,30 +1,21 @@
 package br.usp.ip.ceip.plugins
 
-import br.usp.ip.ceip.domain.security.TokenManager
+import br.usp.ip.ceip.api.AuthController
+import br.usp.ip.ceip.api.LoginPayload
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
+import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
-fun Application.configureRouting(manager: TokenManager) {
+fun Application.configureRouting(authController: AuthController) {
 
     routing {
-        get("/") {
-            call.respondText("Hello World!")
-        }
-
         post("/login") {
-            val accessToken = manager.generateAccessToken("anyone")
-            val refreshToken = manager.generateRefreshToken("anyone")
-
-            return@post call.respond(
-                status = HttpStatusCode.OK,
-                message = mapOf(
-                    "access_token" to accessToken,
-                    "refresh_token" to refreshToken
-                )
-            )
+            val payload = call.receive<LoginPayload>()
+            val (httpStatus, message) = authController.login(payload)
+            call.respond(httpStatus, message)
         }
 
         authenticate {
