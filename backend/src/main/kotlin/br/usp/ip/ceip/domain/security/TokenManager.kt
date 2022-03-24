@@ -45,20 +45,20 @@ class TokenManager(
         return if (credential.payload.audience.contains(audience)) JWTPrincipal(credential.payload) else null
     }
 
-    fun generateAccessToken(username: String): String {
+    fun generateAccessToken(nusp: String): String {
         return JWT.create()
             .withAudience(audience)
             .withIssuer(issuer)
-            .withClaim("username", username)
+            .withClaim("nusp", nusp)
             .withExpiresAt(fifteenMinutesFromNow())
             .sign(accessAlgorithm)
     }
 
-    fun generateRefreshToken(username: String): String {
+    fun generateRefreshToken(nusp: String): String {
         val token = JWT.create()
             .withAudience(audience)
             .withIssuer(issuer)
-            .withClaim("username", username)
+            .withClaim("nusp", nusp)
             .withExpiresAt(aDayFromNow())
             .sign(refreshAlgorithm)
 
