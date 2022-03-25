@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom'
-
 import BannerCard from './BannerCard'
 
 const Home = () => {
