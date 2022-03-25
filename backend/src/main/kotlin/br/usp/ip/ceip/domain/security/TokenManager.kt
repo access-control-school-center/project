@@ -10,6 +10,7 @@ import io.ktor.auth.jwt.*
 import java.util.Date
 
 class TokenManager(
+    private val tokenRepository: RefreshTokenRepository,
     private val issuer: String,
     private val audience: String,
     val realm: String,
@@ -19,7 +20,6 @@ class TokenManager(
 
     private val accessAlgorithm: Algorithm
     private val refreshAlgorithm: Algorithm
-    private val activeRefreshTokens: MutableSet<String>
 
     val accessVerifier: JWTVerifier
         get() = JWT
@@ -38,7 +38,6 @@ class TokenManager(
     init {
         accessAlgorithm = Algorithm.HMAC256(accessTokenSecret)
         refreshAlgorithm = Algorithm.HMAC256(refreshTokenSecret)
-        activeRefreshTokens = mutableSetOf()
     }
 
     fun validateAccess(credential: JWTCredential): Principal? {
@@ -62,20 +61,22 @@ class TokenManager(
             .withExpiresAt(aDayFromNow())
             .sign(refreshAlgorithm)
 
-        activeRefreshTokens.add(token)
+        tokenRepository.save(token)
 
         return token
     }
 
+    @Suppress("unused")
     fun validateRefresh(refreshToken: String): DecodedJWT {
-        if (refreshToken !in activeRefreshTokens)
-            throw JWTVerificationException("Refresh token not found")
+        if (!tokenRepository.isValid(refreshToken))
+            throw JWTVerificationException("Refresh token is invalid")
 
         return refreshVerifier.verify(refreshToken)
     }
 
+    @Suppress("unused")
     fun cancelRefreshToken(token: String) {
-        activeRefreshTokens.remove(token)
+        tokenRepository.makeInvalid(token)
     }
 
     private fun fifteenMinutesFromNow(): Date {
