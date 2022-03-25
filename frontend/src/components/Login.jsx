@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import axios from '../api/axios'
@@ -11,31 +11,40 @@ const Login = () => {
   const location = useLocation()
   const from = location.state?.from?.pathname || "/"
 
-  const [username, setUsername] = useState('')
+  const [nusp, setNusp] = useState('')
   const [password, setPassword] = useState('')
+  const [disabled, setDisabled] = useState(true)
+  const [errMsg, setErrMsg] = useState('')
+  const [hasError, setHasError] = useState(false)
+
+  useEffect(() => {
+    setDisabled(nusp.length === 0 || password.length === 0)
+  }, [nusp, password])
+
+  useEffect(() => {
+    setHasError(errMsg.length > 0)
+  }, [errMsg])
 
   const handleLogin = async () => {
     try {
       const response = await axios.post('/login', {
-        username,
+        nusp,
         password
       })
       const { access_token: accessToken, refresh_token: refreshToken } = response?.data
 
       setAuth({ accessToken, refreshToken })
 
-      setUsername('')
+      setNusp('')
       setPassword('')
       navigate(from, { replace: true })
     } catch (err) {
       if (!err?.response) {
-        console.log('No Server Response');
+        setErrMsg('Sem resposta do servidor, tente novamente mais tarde');
       } else if (err.response?.status === 400) {
-        console.log('Missing Username or Password');
-      } else if (err.response?.status === 401) {
-        console.log('Unauthorized');
+        setErrMsg('Nº USP ou senha incorretos')
       } else {
-        console.log('Login Failed');
+        setErrMsg('Falha desconhecida no login');
       }
     }
   }
@@ -45,11 +54,16 @@ const Login = () => {
 
       <h2>Login</h2>
 
+      {
+        hasError &&
+        <p className="error">{errMsg}</p>
+      }
+
       <input
         type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
+        value={nusp}
+        onChange={(e) => setNusp(e.target.value)}
+        placeholder="Nº USP"
         autoComplete="off"
         required
       />
@@ -63,7 +77,7 @@ const Login = () => {
         className="last"
       />
 
-      <button onClick={handleLogin}>
+      <button className={disabled ? "disabled" : ""} onClick={handleLogin}>
         Login
       </button>
     </section>

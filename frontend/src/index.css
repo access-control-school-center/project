@@ -78,6 +78,11 @@ p {
   @apply my-1;
 }
 
+p.error {
+  @apply bg-red-400 px-2 py-1 rounded-lg;
+  @apply text-xs text-white;
+}
+
 nav {
   @apply -ml-4 -mt-2 px-6 mb-32 w-screen;
   @apply flex flex-row justify-between items-center;
