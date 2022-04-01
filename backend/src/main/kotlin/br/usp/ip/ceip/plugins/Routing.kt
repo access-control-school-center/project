@@ -2,6 +2,7 @@ package br.usp.ip.ceip.plugins
 
 import br.usp.ip.ceip.api.AuthController
 import br.usp.ip.ceip.api.LoginPayload
+import br.usp.ip.ceip.api.PersonController
 import br.usp.ip.ceip.domain.Person
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -10,7 +11,7 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
-fun Application.configureRouting(authController: AuthController) {
+fun Application.configureRouting(authController: AuthController, personController: PersonController) {
 
     routing {
         post("/login") {
