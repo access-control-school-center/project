@@ -40,9 +40,10 @@ fun Application.module() {
     val repo = CredentialRepositoryImpl()
 
     val authController = AuthController(tokenManager, repo)
+    val personController = PersonController(personRepository)
 
     configureSecurity(tokenManager)
     configureSerialization()
     configureHTTP(frontendUrl = audience)
-    configureRouting(authController)
+    configureRouting(authController, personController)
 }
