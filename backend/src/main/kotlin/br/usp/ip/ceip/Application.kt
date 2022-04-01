@@ -1,7 +1,9 @@
 package br.usp.ip.ceip
 
 import br.usp.ip.ceip.api.AuthController
+import br.usp.ip.ceip.api.PersonController
 import br.usp.ip.ceip.db.CredentialRepositoryImpl
+import br.usp.ip.ceip.db.PersonRepositoryImpl
 import br.usp.ip.ceip.db.RefreshTokenRepositoryImpl
 import br.usp.ip.ceip.domain.security.RefreshTokenRepository
 import br.usp.ip.ceip.domain.security.TokenManager
@@ -37,9 +39,10 @@ fun Application.module() {
         refreshSecret
     )
 
-    val repo = CredentialRepositoryImpl()
+    val credentialRepository = CredentialRepositoryImpl()
+    val personRepository = PersonRepositoryImpl()
 
-    val authController = AuthController(tokenManager, repo)
+    val authController = AuthController(tokenManager, credentialRepository)
     val personController = PersonController(personRepository)
 
     configureSecurity(tokenManager)
