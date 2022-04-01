@@ -21,7 +21,17 @@ class PersonRepositoryImpl : PersonRepository {
     }
 
     override fun save(person: Person): Person {
-        // TODO: implement considering attributes
+        if (person.documentValue.isEmpty()) {
+            throw Exception("Invalid document value")
+        }
+
+        when (person.documentType) {
+            "RG" -> rgIndexedRelation.put(person.documentValue, person)
+            "CPF" -> cpfIndexedRelation.put(person.documentValue, person)
+            else -> {
+                throw Exception("Invalid document type")
+            }
+        }
         return person
     }
 }
