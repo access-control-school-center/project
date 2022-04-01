@@ -3,12 +3,22 @@ package br.usp.ip.ceip.db
 import br.usp.ip.ceip.domain.Person
 import br.usp.ip.ceip.domain.PersonRepository
 import br.usp.ip.ceip.domain.exceptions.PersonNotFoundException
+import java.time.LocalDate
 
 @Suppress("unused")
 class PersonRepositoryImpl : PersonRepository {
 
     private val rgIndexedRelation = mutableMapOf<String, Person>()
     private val cpfIndexedRelation = mutableMapOf<String, Person>()
+
+    init {
+        val person = Person(
+            name = "Helena",
+            documentType = "RG",
+            documentValue = "1234",
+            shotDate = LocalDate.of(2021, 11, 17)
+        )
+    }
 
     override fun findOneByRG(rg: String): Person {
         return rgIndexedRelation[rg]
