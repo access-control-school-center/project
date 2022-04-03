@@ -1,6 +1,7 @@
 package br.usp.ip.ceip.db
 
 import br.usp.ip.ceip.db.tables.Credentials
+import br.usp.ip.ceip.db.tables.People
 import br.usp.ip.ceip.db.tables.RefreshTokens
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -21,5 +22,6 @@ fun conn() {
 
         SchemaUtils.create(Credentials)
         SchemaUtils.create(RefreshTokens)
+        SchemaUtils.create(People)
     }
 }

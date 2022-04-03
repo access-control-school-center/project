@@ -1,33 +1,63 @@
 package br.usp.ip.ceip.db
 
+import br.usp.ip.ceip.db.tables.People
+import br.usp.ip.ceip.db.tables.People.documentType
+import br.usp.ip.ceip.db.tables.People.documentValue
+import br.usp.ip.ceip.db.tables.People.name
+import br.usp.ip.ceip.db.tables.People.shotDate
 import br.usp.ip.ceip.domain.Person
 import br.usp.ip.ceip.domain.PersonRepository
 import br.usp.ip.ceip.domain.exceptions.PersonNotFoundException
-import java.time.LocalDate
+import br.usp.ip.ceip.utils.dateStringToLocalDate
+import br.usp.ip.ceip.utils.dateToString
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.transactions.transaction
 
-@Suppress("unused")
 class PersonRepositoryImpl : PersonRepository {
-
-    private val rgIndexedRelation = mutableMapOf<String, Person>()
-    private val cpfIndexedRelation = mutableMapOf<String, Person>()
-
-    init {
-        val person = Person(
-            name = "Helena",
-            documentType = "RG",
-            documentValue = "1234",
-            shotDate = LocalDate.of(2021, 11, 17)
-        )
-    }
-
     override fun findOneByRG(rg: String): Person {
-        return rgIndexedRelation[rg]
-            ?: throw PersonNotFoundException("RG", rg)
+        val people = transaction {
+            People
+                .select { documentType eq "RG" and (documentValue eq rg) }
+                .limit(1)
+                .map {
+                    Person(
+                        name = it[name],
+                        documentType = it[documentType],
+                        documentValue = it[documentValue],
+                        shotDate = dateStringToLocalDate(it[shotDate])
+                    )
+                }
+        }
+
+        if (people.isEmpty()) {
+            throw PersonNotFoundException("RG", rg)
+        }
+
+        return people[0]
     }
 
     override fun findOneByCPF(cpf: String): Person {
-        return cpfIndexedRelation[cpf]
-            ?: throw PersonNotFoundException("CPF", cpf)
+        val people = transaction {
+            People
+                .select { documentType eq "CPF" and (documentValue eq cpf) }
+                .limit(1)
+                .map {
+                    Person(
+                        name = it[name],
+                        documentType = it[documentType],
+                        documentValue = it[documentValue],
+                        shotDate = dateStringToLocalDate(it[shotDate])
+                    )
+                }
+        }
+
+        if (people.isEmpty()) {
+            throw PersonNotFoundException("CPF", cpf)
+        }
+
+        return people[0]
     }
 
     override fun save(person: Person): Person {
@@ -35,13 +65,15 @@ class PersonRepositoryImpl : PersonRepository {
             throw Exception("Invalid document value")
         }
 
-        when (person.documentType) {
-            "RG" -> rgIndexedRelation.put(person.documentValue, person)
-            "CPF" -> cpfIndexedRelation.put(person.documentValue, person)
-            else -> {
-                throw Exception("Invalid document type")
+        transaction {
+            People.insert {
+                it[name] = person.name
+                it[documentType] = person.documentType
+                it[documentValue] = person.documentValue
+                it[shotDate] = dateToString(person.shotDate)
             }
         }
+
         return person
     }
 }
