@@ -5,6 +5,7 @@ import br.usp.ip.ceip.api.PersonController
 import br.usp.ip.ceip.db.CredentialRepositoryImpl
 import br.usp.ip.ceip.db.PersonRepositoryImpl
 import br.usp.ip.ceip.db.RefreshTokenRepositoryImpl
+import br.usp.ip.ceip.db.conn
 import br.usp.ip.ceip.domain.security.RefreshTokenRepository
 import br.usp.ip.ceip.domain.security.TokenManager
 import br.usp.ip.ceip.plugins.configureHTTP
@@ -14,14 +15,13 @@ import br.usp.ip.ceip.plugins.configureSerialization
 import io.ktor.application.*
 
 fun main(args: Array<String>) {
-//    conn()
+    conn()
 
     io.ktor.server.netty.EngineMain.main(args)
 }
 
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module() {
-
     val tokenRepo: RefreshTokenRepository = RefreshTokenRepositoryImpl()
 
     val issuer = environment.config.property("jwt.domain").getString()
