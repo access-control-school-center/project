@@ -1,6 +1,7 @@
 package br.usp.ip.ceip.db
 
 import br.usp.ip.ceip.db.tables.Credentials
+import br.usp.ip.ceip.db.tables.RefreshTokens
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.StdOutSqlLogger
@@ -19,5 +20,6 @@ fun conn() {
         addLogger(StdOutSqlLogger)
 
         SchemaUtils.create(Credentials)
+        SchemaUtils.create(RefreshTokens)
     }
 }
