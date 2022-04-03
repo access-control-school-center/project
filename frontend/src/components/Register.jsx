@@ -1,30 +1,31 @@
 import { useState } from "react"
+import DatePicker from 'react-datepicker'
+
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
+
+function formatDate(date) {
+  return date.toLocaleDateString().replaceAll("/", "-")
+}
 
 const Register = () => {
   const axios = useAxiosPrivate()
 
+  const docTypes = ["RG", "CPF"]
+
   const [name, setName] = useState('')
-  const [role, setRole] = useState('')
-  const [docType, setDocType] = useState('')
+  const [docType, setDocType] = useState('RG')
   const [doc, setDoc] = useState('')
+  const [shotDate, setShotDate] = useState(new Date())
 
   const handleRegistration = async () => {
     const body = {
       name,
-      document: {
-        type: docType,
-        value: doc,
-      },
-      role,
-      lastShotDate: { day: '11', month: '11', year: '2021' },
-      credentials: {
-        username: name,
-        password: doc,
-      }
+      documentType: docType,
+      documentValue: doc,
+      shotDate: formatDate(shotDate),
     }
 
-    const response = await axios.post("/users", JSON.stringify(body))
+    const response = await axios.post("/register", JSON.stringify(body))
 
     console.log(response)
   }
@@ -40,26 +41,27 @@ const Register = () => {
         onChange={(e) => setName(e.target.value)}
       />
 
-      <input
-        type="text"
-        placeholder="Perfil"
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-      />
-
-      <input
-        type="text"
-        placeholder="Tipo de Documento"
+      <select
         value={docType}
         onChange={(e) => setDocType(e.target.value)}
-      />
+      >
+        {docTypes.map((type) => (
+          <option key={type} value={type}>{type}</option>
+        ))}
+      </select>
 
       <input
         type="text"
-        placeholder="Número de Documento"
-        className="last"
+        placeholder={"Número do " + (docType.length === 0 ? "Documento" : docType)}
         value={doc}
         onChange={(e) => setDoc(e.target.value)}
+      />
+
+      <DatePicker
+        title="Data da última dose"
+        selected={shotDate}
+        onChange={(date) => setShotDate(date)}
+        className="my-6 w-full"
       />
 
       <button onClick={handleRegistration}>
