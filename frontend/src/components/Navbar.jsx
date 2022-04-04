@@ -34,8 +34,6 @@ const Navbar = () => {
 
       {isLogged &&
         <ul>
-          <li onClick={logout}>Sair</li>
-
           {location.pathname !== "/" &&
             <li>
               <Link to="/">Início</Link>
@@ -53,6 +51,8 @@ const Navbar = () => {
               <Link to="/search">Busca</Link>
             </li>
           }
+
+          <li onClick={logout}>Sair</li>
         </ul>
       }
 
