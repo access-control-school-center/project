@@ -28,3 +28,13 @@ fun login(
         throw Exception("invalid nusp or password")
     }
 }
+
+fun refreshLogin(
+    refreshToken: String,
+    manager: TokenManager,
+): TokenPair {
+    val decodedJWT = manager.validateRefresh(refreshToken)
+    val nusp = decodedJWT.getClaim("nusp").asString()
+    val accessToken = manager.generateAccessToken(nusp)
+    return TokenPair(accessToken, refreshToken)
+}

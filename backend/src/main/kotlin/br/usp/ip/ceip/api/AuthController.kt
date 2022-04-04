@@ -1,7 +1,9 @@
 package br.usp.ip.ceip.api
 
 import br.usp.ip.ceip.domain.CredentialRepository
+import br.usp.ip.ceip.domain.refreshLogin
 import br.usp.ip.ceip.domain.security.TokenManager
+import com.auth0.jwt.exceptions.JWTVerificationException
 import io.ktor.http.*
 
 class AuthController(
@@ -32,6 +34,25 @@ class AuthController(
             return ControllerResult(
                 httpStatus = HttpStatusCode.BadRequest,
                 message = errorResponse
+            )
+        }
+    }
+
+    fun refresh(payload: RefreshPayload): ControllerResult<Any> {
+        return try {
+            val (token) = payload
+            val (accessToken, refreshToken) = refreshLogin(token, manager)
+            ControllerResult(
+                HttpStatusCode.OK,
+                message = mapOf(
+                    "access_token" to accessToken,
+                    "refresh_token" to refreshToken
+                )
+            )
+        } catch (e: JWTVerificationException) {
+            ControllerResult(
+                httpStatus = HttpStatusCode.Unauthorized,
+                message = mapOf("error" to e.message!!)
             )
         }
     }

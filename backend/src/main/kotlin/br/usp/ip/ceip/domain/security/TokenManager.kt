@@ -49,7 +49,7 @@ class TokenManager(
             .withAudience(audience)
             .withIssuer(issuer)
             .withClaim("nusp", nusp)
-            .withExpiresAt(fifteenMinutesFromNow())
+            .withExpiresAt(fiveMinutesFromNow())
             .sign(accessAlgorithm)
     }
 
@@ -66,7 +66,6 @@ class TokenManager(
         return token
     }
 
-    @Suppress("unused")
     fun validateRefresh(refreshToken: String): DecodedJWT {
         if (!tokenRepository.isValid(refreshToken))
             throw JWTVerificationException("Refresh token is invalid")
@@ -79,9 +78,9 @@ class TokenManager(
         tokenRepository.makeInvalid(token)
     }
 
-    private fun fifteenMinutesFromNow(): Date {
-        val fifteenMinutesMillis = 15 * 60 * 1000
-        return futureDate(fifteenMinutesMillis)
+    private fun fiveMinutesFromNow(): Date {
+        val fiveMinutesMillis = 5 * 60 * 1000
+        return futureDate(fiveMinutesMillis)
     }
 
     private fun aDayFromNow(): Date {

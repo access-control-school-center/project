@@ -3,6 +3,7 @@ package br.usp.ip.ceip.plugins
 import br.usp.ip.ceip.api.AuthController
 import br.usp.ip.ceip.api.LoginPayload
 import br.usp.ip.ceip.api.PersonController
+import br.usp.ip.ceip.api.RefreshPayload
 import br.usp.ip.ceip.domain.Person
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -16,6 +17,12 @@ fun Application.configureRouting(authController: AuthController, personControlle
         post("/login") {
             val payload = call.receive<LoginPayload>()
             val (httpStatus, message) = authController.login(payload)
+            call.respond(httpStatus, message)
+        }
+
+        post("/token") {
+            val payload = call.receive<RefreshPayload>()
+            val (httpStatus, message) = authController.refresh(payload)
             call.respond(httpStatus, message)
         }
 
