@@ -1,9 +1,5 @@
 import usePerson from '../hooks/usePerson'
 
-const parseDate = ({ day, month, year }) => {
-  return `${day}/${month}/${year}`
-}
-
 const USER = "UserOrCompanion",
   EMPLOYEE = "Employee",
   VOLUNTEER = "Volunteer"
@@ -30,7 +26,7 @@ const roleStyle = (role) => {
 const PersonInfo = () => {
   const { person } = usePerson()
 
-  const { name, role, id, document: doc, services, lastShotDate, responsible, credential } = person
+  const { name, role, id, documentType, documentValue, services, shotDate, responsible, credential } = person
 
   return (<>
     <h2>{name}</h2>
@@ -47,11 +43,11 @@ const PersonInfo = () => {
       </li>
 
       <li>
-        <span className="font-bold">{doc.type}:</span> {doc.value}
+        <span className="font-bold">{documentType}:</span> {documentValue}
       </li>
 
       <li>
-        <span className="font-bold">Data da última dose:</span> {parseDate(lastShotDate)}
+        <span className="font-bold">Data da última dose:</span> {shotDate}
       </li>
 
       <hr className="my-4" />

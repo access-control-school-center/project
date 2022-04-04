@@ -7,8 +7,9 @@ export const PersonProvider = () => {
   const [person, setPerson] = useState({
     id: undefined,
     name: undefined,
-    document: undefined,
-    lastShotDate: undefined,
+    documentType: undefined,
+    documentValue: undefined,
+    shotDate: undefined,
     role: undefined,
     services: undefined,
     credential: undefined,

@@ -20,9 +20,9 @@ function App() {
 
           <Route element={<AuthRequired />}>
             <Route path="/" element={<Home />} />
-            <Route path="/register" element={<Register />} />
 
             <Route element={<PersonProvider />}>
+              <Route path="/register" element={<Register />} />
               <Route path="/search" element={<Search />} />
               <Route path="/user" element={<User />} />
             </Route>
