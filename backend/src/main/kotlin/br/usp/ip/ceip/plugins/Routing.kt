@@ -6,7 +6,6 @@ import br.usp.ip.ceip.api.PersonController
 import br.usp.ip.ceip.domain.Person
 import io.ktor.application.*
 import io.ktor.auth.*
-import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -21,13 +20,6 @@ fun Application.configureRouting(authController: AuthController, personControlle
         }
 
         authenticate {
-            get("/foo") {
-                call.respond(
-                    status = HttpStatusCode.OK,
-                    message = mapOf("msg" to "I see you're logged in")
-                )
-            }
-
             post("/register") {
                 val person = call.receive<Person>()
                 val (httpStatus, message) = personController.register(person)
