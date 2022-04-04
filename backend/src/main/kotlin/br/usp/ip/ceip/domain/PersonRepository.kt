@@ -22,6 +22,23 @@ interface PersonRepository {
     fun findOneByCPF(cpf: String): Person
 
     /**
+     * Finds a person by CEIP-ID
+     *
+     * @param id: String - the value of the CEIP-ID
+     * @throws PersonNotFoundException when no such document value is found
+     * @return the person found
+     */
+    fun findOneById(id: String): Person
+
+    /**
+     * Finds a list of people by name
+     *
+     * @param name: String - the name
+     * @return a list with all matches
+     */
+    fun findByName(name: String): List<Person>
+
+    /**
      * Saves one person to the repository and gives it a unique ID
      *
      * @param person: Person - the representation of the person to be added

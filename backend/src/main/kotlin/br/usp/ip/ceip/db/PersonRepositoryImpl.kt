@@ -63,6 +63,46 @@ class PersonRepositoryImpl : PersonRepository {
         return people[0]
     }
 
+    override fun findOneById(id: String): Person {
+        val intID = CEIPID.fromHexString(id).toInt()
+
+        val people = transaction {
+            People
+                .select { People.id eq intID }
+                .limit(1)
+                .map {
+                    Person(
+                        name = it[name],
+                        documentType = it[documentType],
+                        documentValue = it[documentValue],
+                        shotDate = dateStringToLocalDate(it[shotDate]),
+                        id = CEIPID.fromInt(it[People.id].value)
+                    )
+                }
+        }
+
+        if (people.isEmpty())
+            throw PersonNotFoundException("CEIPID", id)
+
+        return people[0]
+    }
+
+    override fun findByName(name: String): List<Person> {
+        return transaction {
+            People
+                .select { People.name like "%$name%" }
+                .map {
+                    Person(
+                        name = it[People.name],
+                        documentType = it[documentType],
+                        documentValue = it[documentValue],
+                        shotDate = dateStringToLocalDate(it[shotDate]),
+                        id = CEIPID.fromInt(it[People.id].value)
+                    )
+                }
+        }
+    }
+
     override fun save(person: Person): Person {
         if (person.documentValue.isEmpty()) {
             throw Exception("Invalid document value")

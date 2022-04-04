@@ -11,6 +11,10 @@ class CEIPID(val id: String) {
             val id = Integer.toHexString(n + BASE)
             return CEIPID(id)
         }
+
+        fun fromHexString(hex: String): CEIPID {
+            return CEIPID(hex)
+        }
     }
 
     @Suppress("unused")

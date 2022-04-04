@@ -33,6 +33,12 @@ fun Application.configureRouting(authController: AuthController, personControlle
                 val (httpStatus, message) = personController.register(person)
                 call.respond(httpStatus, message)
             }
+
+            get("/people") {
+                val params = call.request.queryParameters
+                val (httpStatus, message) = personController.search(params)
+                call.respond(httpStatus, message)
+            }
         }
     }
 }
