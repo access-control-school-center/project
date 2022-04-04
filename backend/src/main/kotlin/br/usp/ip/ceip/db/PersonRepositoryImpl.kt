@@ -5,13 +5,14 @@ import br.usp.ip.ceip.db.tables.People.documentType
 import br.usp.ip.ceip.db.tables.People.documentValue
 import br.usp.ip.ceip.db.tables.People.name
 import br.usp.ip.ceip.db.tables.People.shotDate
+import br.usp.ip.ceip.domain.CEIPID
 import br.usp.ip.ceip.domain.Person
 import br.usp.ip.ceip.domain.PersonRepository
 import br.usp.ip.ceip.domain.exceptions.PersonNotFoundException
 import br.usp.ip.ceip.utils.dateStringToLocalDate
 import br.usp.ip.ceip.utils.dateToString
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -26,7 +27,8 @@ class PersonRepositoryImpl : PersonRepository {
                         name = it[name],
                         documentType = it[documentType],
                         documentValue = it[documentValue],
-                        shotDate = dateStringToLocalDate(it[shotDate])
+                        shotDate = dateStringToLocalDate(it[shotDate]),
+                        id = CEIPID.fromInt(it[People.id].value)
                     )
                 }
         }
@@ -48,7 +50,8 @@ class PersonRepositoryImpl : PersonRepository {
                         name = it[name],
                         documentType = it[documentType],
                         documentValue = it[documentValue],
-                        shotDate = dateStringToLocalDate(it[shotDate])
+                        shotDate = dateStringToLocalDate(it[shotDate]),
+                        id = CEIPID.fromInt(it[People.id].value)
                     )
                 }
         }
@@ -65,8 +68,8 @@ class PersonRepositoryImpl : PersonRepository {
             throw Exception("Invalid document value")
         }
 
-        transaction {
-            People.insert {
+        val id = transaction {
+            People.insertAndGetId {
                 it[name] = person.name
                 it[documentType] = person.documentType
                 it[documentValue] = person.documentValue
@@ -74,6 +77,14 @@ class PersonRepositoryImpl : PersonRepository {
             }
         }
 
-        return person
+        val (name, documentType, documentValue, shotDate) = person
+
+        return Person(
+            name = name,
+            documentType = documentType,
+            documentValue = documentValue,
+            shotDate = shotDate,
+            id = CEIPID.fromInt(id.value)
+        )
     }
 }

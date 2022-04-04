@@ -10,4 +10,5 @@ data class Person(
     val documentValue: String,
     @Serializable(with = LocalDateSerializer::class)
     val shotDate: LocalDate,
+    val id: CEIPID? = null,
 )
