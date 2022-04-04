@@ -9,6 +9,7 @@ import AuthRequired from './components/AuthRequired';
 import Layout from './components/Layout';
 import Search from './components/Search';
 import { PersonProvider } from './contexts/Person'
+import PersonRequired from './components/PersonRequired';
 
 function App() {
   return (
@@ -24,7 +25,11 @@ function App() {
             <Route element={<PersonProvider />}>
               <Route path="/register" element={<Register />} />
               <Route path="/search" element={<Search />} />
-              <Route path="/user" element={<User />} />
+
+              <Route element={<PersonRequired />} >
+                <Route path="/user" element={<User />} />
+              </Route>
+
             </Route>
 
           </Route>
