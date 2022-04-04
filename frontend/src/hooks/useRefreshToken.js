@@ -3,23 +3,19 @@ import useAuth from "./useAuth"
 
 const useRefreshToken = () => {
   const { auth, setAuth } = useAuth()
+  return async () => {
+    const data = { token: auth.refreshToken }
+    const config = { withCredentials: true }
 
-  const refresh = async () => {
-    const response = await axios.post('/token', {
-      token: auth.refreshToken
-    }, {
-      withCredentials: true
-    })
+
+    const response = await axios.post('/token', data, config)
 
     setAuth(prev => {
-      console.log(JSON.stringify(prev))
-      console.log(response.data.accessToken)
-
-      return { ...prev, accessToken: response.data.accessToken }
+      return { ...prev, accessToken: response.data.access_token }
     })
-  }
 
-  return refresh
+    return response.data.access_token
+  }
 }
 
 export default useRefreshToken
