@@ -6,6 +6,7 @@ import br.usp.ip.ceip.db.CredentialRepositoryImpl
 import br.usp.ip.ceip.db.PersonRepositoryImpl
 import br.usp.ip.ceip.db.RefreshTokenRepositoryImpl
 import br.usp.ip.ceip.db.conn
+import br.usp.ip.ceip.domain.PersonValidator
 import br.usp.ip.ceip.domain.security.RefreshTokenRepository
 import br.usp.ip.ceip.domain.security.TokenManager
 import br.usp.ip.ceip.plugins.configureHTTP
@@ -42,8 +43,10 @@ fun Application.module() {
     val credentialRepository = CredentialRepositoryImpl()
     val personRepository = PersonRepositoryImpl()
 
+    val personValidator = PersonValidator(personRepository)
+
     val authController = AuthController(tokenManager, credentialRepository)
-    val personController = PersonController(personRepository)
+    val personController = PersonController(personRepository, personValidator)
 
     configureSecurity(tokenManager)
     configureSerialization()
