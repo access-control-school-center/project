@@ -9,6 +9,13 @@ function formatDate(date) {
   return date.toLocaleDateString().replaceAll("/", "-")
 }
 
+function translateError(err) {
+  if (/document.+already in use/.test(err))
+    return "Documento já está cadastrado"
+
+  return "Os dados fornecidos são inválidos"
+}
+
 const Register = () => {
   const axios = useAxiosPrivate()
 
@@ -51,7 +58,8 @@ const Register = () => {
       if (error.response) {
         switch (error.response.status / 100) {
           case 4:
-            setErrMsg("Os dados fornecidos são inválidos.")
+            const err = translateError(error.response.data.error)
+            setErrMsg(err)
             break
           case 5:
             setErrMsg("O servidor está indisponível, tente novamente mais tarde.")
