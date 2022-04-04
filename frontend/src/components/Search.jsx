@@ -57,11 +57,11 @@ const Search = () => {
     setDisabled(true)
 
     try {
-      const response = await axios.get("/users", {
+      const response = await axios.get("/people", {
         params: buildParams()
       })
 
-      setPeople(response.data)
+      setPeople(response.data.people)
     } catch (err) {
       console.log(err)
       setPeople([])
@@ -81,8 +81,7 @@ const Search = () => {
   const handleNavigation = (id) => {
     return () => {
       const i = people.findIndex((person) => person.id === id)
-      setPerson(people[i])
-
+      setPerson({ ...people[i], role: 'UserOrCompanion', services: ['APOIAR'] })
       navigate("/user", { from: location })
     }
   }
