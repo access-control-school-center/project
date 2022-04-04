@@ -5,10 +5,10 @@ import br.usp.ip.ceip.domain.security.TokenManager
 import io.ktor.http.*
 
 class AuthController(
-    val manager: TokenManager,
-    val credentialRepository: CredentialRepository
+    private val manager: TokenManager,
+    private val credentialRepository: CredentialRepository
 ) {
-    fun login(payload: LoginPayload): ControllerResult {
+    fun login(payload: LoginPayload): ControllerResult<Any> {
         val errorResponse = mapOf("error" to "invalid nusp or password")
 
         val (nusp, password) = payload

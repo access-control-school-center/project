@@ -3,27 +3,27 @@ package br.usp.ip.ceip.domain
 import br.usp.ip.ceip.domain.exceptions.PersonNotFoundException
 
 fun register(person: Person, personRepository: PersonRepository) : Person {
-    if (person.documentType.compareTo("RG") == 0) {
-        try {
-            personRepository.findOneByRG(person.documentValue)
+    when (person.documentType) {
+        "RG" -> {
+            try {
+                personRepository.findOneByRG(person.documentValue)
 
-             throw Exception("Person [$person.documentType=$person.documentValue] already registers")
-        } catch (e: PersonNotFoundException) {
-            personRepository.save(person)
+                throw Exception("Person [$person.documentType=$person.documentValue] already registers")
+            } catch (e: PersonNotFoundException) {
+                return personRepository.save(person)
+            }
         }
-    }
 
-    if (person.documentType.compareTo("CPF") == 0) {
-        try {
-            personRepository.findOneByCPF(person.documentValue)
+        "CPF" -> {
+            try {
+                personRepository.findOneByCPF(person.documentValue)
 
-             throw Exception("Person [$person.documentType=$person.documentValue] already registers")
-        } catch (e: PersonNotFoundException) {
-            personRepository.save(person)
+                throw Exception("Person [$person.documentType=$person.documentValue] already registers")
+            } catch (e: PersonNotFoundException) {
+                return personRepository.save(person)
+            }
         }
+
+        else -> throw Exception("Person must have either RG or CPF")
     }
-
-    // caso não vem nem com RG nem com CPF
-
-    return person
 }
