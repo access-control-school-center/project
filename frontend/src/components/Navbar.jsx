@@ -13,7 +13,7 @@ const Navbar = () => {
 
   const logout = async () => {
     try {
-      await axios.put('/logout', {
+      await axios.post('/logout', {
         token: auth?.refreshToken
       })
 

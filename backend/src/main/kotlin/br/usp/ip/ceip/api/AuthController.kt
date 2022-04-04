@@ -1,6 +1,7 @@
 package br.usp.ip.ceip.api
 
 import br.usp.ip.ceip.domain.CredentialRepository
+import br.usp.ip.ceip.domain.exceptions.TokenNotFoundException
 import br.usp.ip.ceip.domain.refreshLogin
 import br.usp.ip.ceip.domain.security.TokenManager
 import com.auth0.jwt.exceptions.JWTVerificationException
@@ -52,6 +53,22 @@ class AuthController(
         } catch (e: JWTVerificationException) {
             ControllerResult(
                 httpStatus = HttpStatusCode.Unauthorized,
+                message = mapOf("error" to e.message!!)
+            )
+        }
+    }
+
+    fun logout(payload: LogoutPayload): ControllerResult<Any> {
+        val (token) = payload
+        return try {
+            manager.cancelRefreshToken(token)
+            ControllerResult(
+                httpStatus = HttpStatusCode.OK,
+                message = mapOf("message" to "logged out")
+            )
+        } catch (e: TokenNotFoundException) {
+            ControllerResult(
+                httpStatus = HttpStatusCode.BadRequest,
                 message = mapOf("error" to e.message!!)
             )
         }
