@@ -17,16 +17,22 @@ const Login = () => {
   const [errMsg, setErrMsg] = useState('')
   const [hasError, setHasError] = useState(false)
 
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   useEffect(() => {
-    setDisabled(nusp.length === 0 || password.length === 0)
-  }, [nusp, password])
+    const emptyForm = nusp.length === 0 || password.length === 0
+    setDisabled(isSubmitting || emptyForm)
+  }, [nusp, password, isSubmitting])
 
   useEffect(() => {
     setHasError(errMsg.length > 0)
   }, [errMsg])
 
   const handleLogin = async () => {
+    if (disabled) return
+
     try {
+      setIsSubmitting(true)
       const response = await axios.post('/login', {
         nusp,
         password
@@ -37,8 +43,10 @@ const Login = () => {
 
       setNusp('')
       setPassword('')
+      setIsSubmitting(false)
       navigate(from, { replace: true })
     } catch (err) {
+      setIsSubmitting(false)
       if (!err?.response) {
         setErrMsg('Sem resposta do servidor, tente novamente mais tarde');
       } else if (err.response?.status === 400) {
@@ -77,7 +85,10 @@ const Login = () => {
         className="last"
       />
 
-      <button className={disabled ? "disabled" : ""} onClick={handleLogin}>
+      <button
+        className={disabled ? "disabled" : ""}
+        onClick={handleLogin}
+      >
         Login
       </button>
     </section>

@@ -33,11 +33,21 @@ const Register = () => {
   const [errMsg, setErrMsg] = useState('')
   const [hasError, setHasError] = useState(false)
 
+  const [disabled, setDisabled] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   useEffect(() => {
     setHasError(errMsg.length > 0)
   }, [errMsg])
 
+  useEffect(() => {
+    const emptyForm = name.length === 0 && doc.length === 0
+    setDisabled(isSubmitting || emptyForm)
+  }, [name, doc, isSubmitting])
+
   const handleRegistration = async () => {
+    if (disabled) return
+
     const body = {
       name,
       documentType: docType,
@@ -46,6 +56,7 @@ const Register = () => {
     }
 
     try {
+      setIsSubmitting(true)
       await axios.post("/register", JSON.stringify(body))
       setPerson({
         id: 1,
@@ -53,8 +64,10 @@ const Register = () => {
         role: "UserOrCompanion",
         services: ["APOIAR"]
       })
+      setIsSubmitting(false)
       navigate("/perfil", { from: location })
     } catch (error) {
+      setIsSubmitting(false)
       if (error.response) {
         switch (error.response.status / 100) {
           case 4:
@@ -114,7 +127,10 @@ const Register = () => {
         className="my-6 w-full"
       />
 
-      <button onClick={handleRegistration}>
+      <button
+        className={disabled ? "disabled" : ""}
+        onClick={handleRegistration}
+      >
         Cadastrar
       </button>
     </section>
