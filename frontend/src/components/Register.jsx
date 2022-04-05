@@ -53,7 +53,7 @@ const Register = () => {
         role: "UserOrCompanion",
         services: ["APOIAR"]
       })
-      navigate("/user", { from: location })
+      navigate("/perfil", { from: location })
     } catch (error) {
       if (error.response) {
         switch (error.response.status / 100) {

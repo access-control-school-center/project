@@ -7,14 +7,14 @@ const Home = () => {
         title="Cadastro"
         description="Crie um novo cadastro no sistema uma nova pessoa, seja um Usuário, Acompanhante, Funcionário ou Voluntário"
         buttonLabel="Ir para cadastro"
-        to="/register"
+        to="/cadastro"
       />
 
       <BannerCard
         title="Busca"
         description="Encontre uma pessoa cadastrada, tanto para imprimir sua etiqueta, quanto para resolver dados pendentes."
         buttonLabel="Ir para busca"
-        to="/search"
+        to="/busca"
       />
     </section>
   )

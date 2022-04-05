@@ -23,11 +23,11 @@ function App() {
             <Route path="/" element={<Home />} />
 
             <Route element={<PersonProvider />}>
-              <Route path="/register" element={<Register />} />
-              <Route path="/search" element={<Search />} />
+              <Route path="/cadastro" element={<Register />} />
+              <Route path="/busca" element={<Search />} />
 
               <Route element={<PersonRequired />} >
-                <Route path="/user" element={<User />} />
+                <Route path="/perfil" element={<User />} />
               </Route>
 
             </Route>

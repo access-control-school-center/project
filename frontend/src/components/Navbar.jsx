@@ -40,15 +40,15 @@ const Navbar = () => {
             </li>
           }
 
-          {location.pathname !== "/register" && location.pathname !== "/" &&
+          {location.pathname !== "/cadastro" && location.pathname !== "/" &&
             <li>
-              <Link to="/register">Cadastro</Link>
+              <Link to="/cadastro">Cadastro</Link>
             </li>
           }
 
-          {location.pathname !== "/search" && location.pathname !== "/" &&
+          {location.pathname !== "/busca" && location.pathname !== "/" &&
             <li>
-              <Link to="/search">Busca</Link>
+              <Link to="/busca">Busca</Link>
             </li>
           }
 

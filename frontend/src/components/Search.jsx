@@ -82,7 +82,7 @@ const Search = () => {
     return () => {
       const i = people.findIndex((person) => person.id === id)
       setPerson({ ...people[i], role: 'UserOrCompanion', services: ['APOIAR'] })
-      navigate("/user", { from: location })
+      navigate("/perfil", { from: location })
     }
   }
 
