@@ -23,8 +23,12 @@ const Search = () => {
   const [selectedFilter, setSelectedFilter] = useState('ID-CEIP')
   const [given, setGiven] = useState('')
   const [people, setPeople] = useState([])
-  const [emptyPeopleList, setEmptyPeopleList] = useState(true)
   const [disabled, setDisabled] = useState(true)
+
+  const [submitted, setSubmitted] = useState(false)
+  const [emptyPeopleList, setEmptyPeopleList] = useState(true)
+  const [selectedFilterCopy, setSelectedFilterCopy] = useState('ID-CEIP')
+  const [givenCopy, setGivenCopy] = useState('')
 
   const buildParams = () => {
     switch (selectedFilter) {
@@ -57,6 +61,9 @@ const Search = () => {
     setDisabled(true)
 
     try {
+      setSubmitted(true)
+      setSelectedFilterCopy(selectedFilter)
+      setGivenCopy(given)
       const response = await axios.get("/people", {
         params: buildParams()
       })
@@ -119,7 +126,7 @@ const Search = () => {
       </button>
 
       {
-        emptyPeopleList ||
+        submitted && !emptyPeopleList &&
         <>
           <hr />
 
@@ -132,6 +139,17 @@ const Search = () => {
               </li>
             ))}
           </ul>
+        </>
+      }
+
+      {
+        submitted && emptyPeopleList &&
+        <>
+          <hr />
+
+          <h3>Resultado da busca</h3>
+
+          <p>A busca por "<span className="italic">{selectedFilterCopy} = {givenCopy}</span>" não obteve resultados</p>
         </>
       }
 
