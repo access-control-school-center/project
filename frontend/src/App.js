@@ -10,6 +10,7 @@ import Layout from './components/Layout';
 import Search from './components/Search';
 import { PersonProvider } from './contexts/Person'
 import PersonRequired from './components/PersonRequired';
+import NotFound from './components/NotFound';
 
 function App() {
   return (
@@ -31,6 +32,8 @@ function App() {
               </Route>
 
             </Route>
+
+            <Route path="*" element={<NotFound />} />
 
           </Route>
 
