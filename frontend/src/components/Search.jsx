@@ -88,7 +88,12 @@ const Search = () => {
   const handleNavigation = (id) => {
     return () => {
       const i = people.findIndex((person) => person.id === id)
-      setPerson({ ...people[i], role: 'UserOrCompanion', services: ['APOIAR'] })
+      setPerson({
+        id: 1,                        // TODO: hardcoded - remove
+        ...people[i],
+        role: 'UserOrCompanion',      // TODO: hardcoded - remove
+        services: ['APOIAR']          // TODO: hardcoded - remove
+      })
       navigate("/perfil", { from: location })
     }
   }

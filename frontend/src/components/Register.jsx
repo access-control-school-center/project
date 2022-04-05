@@ -59,10 +59,10 @@ const Register = () => {
       setIsSubmitting(true)
       await axios.post("/register", JSON.stringify(body))
       setPerson({
-        id: 1,
+        id: 1,                    // TODO: hardcoded - remove
         ...body,
-        role: "UserOrCompanion",
-        services: ["APOIAR"]
+        role: "UserOrCompanion",  // TODO: hardcoded - remove
+        services: ["APOIAR"]      // TODO: hardcoded - remove
       })
       setIsSubmitting(false)
       navigate("/perfil", { from: location })
