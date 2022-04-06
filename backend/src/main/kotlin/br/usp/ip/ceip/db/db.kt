@@ -9,13 +9,14 @@ import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun conn() {
-    Database.connect(
-        url = "jdbc:postgresql://localhost:5432/ceip",
-        driver = "org.postgresql.Driver",
-        user = "root",
-        password = "secret"
-    )
+fun setupDatabase(
+    url: String,
+    driver: String,
+    user: String,
+    password: String,
+) {
+
+    Database.connect(url, driver, user, password)
 
     transaction {
         addLogger(StdOutSqlLogger)
