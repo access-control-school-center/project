@@ -6,6 +6,9 @@ import br.usp.ip.ceip.db.CredentialRepositoryImpl
 import br.usp.ip.ceip.db.PersonRepositoryImpl
 import br.usp.ip.ceip.db.RefreshTokenRepositoryImpl
 import br.usp.ip.ceip.db.setupDatabase
+import br.usp.ip.ceip.domain.DocumentValidator
+import br.usp.ip.ceip.domain.Person
+import br.usp.ip.ceip.domain.PersonRepository
 import br.usp.ip.ceip.domain.PersonValidator
 import br.usp.ip.ceip.domain.security.RefreshTokenRepository
 import br.usp.ip.ceip.domain.security.TokenManager
@@ -56,4 +59,5 @@ fun Application.module() {
     configureSerialization()
     configureHTTP(frontendUrl = audience)
     configureRouting(authController, personController)
+
 }
