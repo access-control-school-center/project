@@ -10,13 +10,17 @@ import br.usp.ip.ceip.domain.DocumentValidator
 import br.usp.ip.ceip.domain.Person
 import br.usp.ip.ceip.domain.PersonRepository
 import br.usp.ip.ceip.domain.PersonValidator
+import br.usp.ip.ceip.domain.ShotDateValidator
 import br.usp.ip.ceip.domain.security.RefreshTokenRepository
 import br.usp.ip.ceip.domain.security.TokenManager
 import br.usp.ip.ceip.plugins.configureHTTP
 import br.usp.ip.ceip.plugins.configureRouting
 import br.usp.ip.ceip.plugins.configureSecurity
 import br.usp.ip.ceip.plugins.configureSerialization
+import br.usp.ip.ceip.utils.dateToString
 import io.ktor.application.*
+import java.time.LocalDate
+import java.time.ZoneId
 
 fun main(args: Array<String>) = io.ktor.server.netty.EngineMain.main(args)
 

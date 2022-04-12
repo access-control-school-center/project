@@ -52,7 +52,7 @@ class DocumentValidator {
         return validateFirstDigit(cpf) && validateSecondDigit(cpf)
     }
 
-    fun validateDocument(person: Person) : Boolean{
+    fun validateDocument(person: Person) : Boolean {
         return validateCPF(person.documentValue)
     }
 }
