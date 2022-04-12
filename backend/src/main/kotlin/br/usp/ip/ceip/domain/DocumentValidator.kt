@@ -21,8 +21,7 @@ class DocumentValidator {
         rest = ( sum * 10 ) % 11
 
         if (rest == 10) rest = 0
-        println(cpf.get(9).toString().toInt())
-        println(rest)
+
         if (rest != cpf.get(9).toString().toInt()) return false
 
         return true
@@ -39,8 +38,7 @@ class DocumentValidator {
         rest = ( sum * 10) % 11
 
         if (rest == 10) rest = 0
-        println(cpf.get(10).toString().toInt())
-        println(rest)
+
         if (rest != cpf.get(10).toString().toInt()) return false
 
         return true
