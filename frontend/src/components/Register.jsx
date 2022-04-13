@@ -23,7 +23,10 @@ const Register = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const docTypes = ["RG", "CPF"]
+  const RG = "RG",
+    CPF = "CPF",
+    UNDOC = "Não Documentado"
+  const docTypes = [RG, CPF, UNDOC]
 
   const [name, setName] = useState('')
   const [docType, setDocType] = useState('RG')
@@ -51,8 +54,11 @@ const Register = () => {
     const body = {
       name,
       documentType: docType,
-      documentValue: doc,
       shotDate: formatDate(shotDate),
+    }
+
+    if (docType !== UNDOC) {
+      body.documentValue = doc
     }
 
     try {
@@ -113,12 +119,14 @@ const Register = () => {
         ))}
       </select>
 
-      <input
-        type="text"
-        placeholder={"Número do " + (docType.length === 0 ? "Documento" : docType)}
-        value={doc}
-        onChange={(e) => setDoc(e.target.value)}
-      />
+      {docType !== UNDOC &&
+        <input
+          type="text"
+          placeholder={"Número do " + (docType.length === 0 ? "Documento" : docType)}
+          value={doc}
+          onChange={(e) => setDoc(e.target.value)}
+        />
+      }
 
       <DatePicker
         title="Data da última dose"
