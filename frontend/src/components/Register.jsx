@@ -54,11 +54,8 @@ const Register = () => {
     const body = {
       name,
       documentType: docType,
+      documentValue: docType === UNDOC ? '' : doc,
       shotDate: formatDate(shotDate),
-    }
-
-    if (docType !== UNDOC) {
-      body.documentValue = doc
     }
 
     try {
