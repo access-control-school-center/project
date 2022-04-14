@@ -6,7 +6,7 @@ const PersonRequired = () => {
   const { person } = usePerson()
 
   return (
-    person.id
+    person.id?.length > 0
       ? <Outlet />
       : <Navigate to="/" replace />
   )
