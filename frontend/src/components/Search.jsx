@@ -10,6 +10,15 @@ const CPF = "CPF",
   N_USP = "Nº USP",
   RG = "RG"
 
+function interpretRole(person) {
+  const keys = Object.keys(person)
+
+  if (keys.includes("services"))
+    return "UserOrCompanion"
+
+  return "Employee"
+}
+
 const Search = () => {
   const axios = useAxiosPrivate()
   const navigate = useNavigate()
@@ -89,10 +98,8 @@ const Search = () => {
     return () => {
       const i = people.findIndex((person) => person.id === id)
       setPerson({
-        id: 1,                        // TODO: hardcoded - remove
         ...people[i],
-        role: 'UserOrCompanion',      // TODO: hardcoded - remove
-        services: ['APOIAR']          // TODO: hardcoded - remove
+        role: interpretRole(people[i])
       })
       navigate("/perfil", { from: location })
     }
