@@ -4,7 +4,9 @@ import br.usp.ip.ceip.domain.exceptions.PersonNotFoundException
 import br.usp.ip.ceip.domain.exceptions.ValidationException
 
 class PersonValidator(
-    private val personRepository: PersonRepository
+    private val personRepository: PersonRepository,
+    private val documentValidator: DocumentValidator,
+    private val shotDateValidator: ShotDateValidator,
 ) {
     private fun validateDocumentUniqueness(type: String, value: String) {
         when (type) {
@@ -28,11 +30,17 @@ class PersonValidator(
                 }
             }
 
+            "UNDO" -> {
+                return
+            }
+
             else -> throw ValidationException("Person", "document [CPF, RG]", "must have either RG or CPF")
         }
     }
 
     fun validateCreation(person: Person) {
         validateDocumentUniqueness(person.documentType, person.documentValue)
+        documentValidator.validateDocument(person)
+        shotDateValidator.validateShotDate(person)
     }
 }
