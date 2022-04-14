@@ -82,7 +82,7 @@ class DocumentValidator {
             "CPF" -> {
                 validateCPF(person.documentValue)
             }
-            "UNDO" -> {
+            "Não Documentado" -> {
                 return
             }
         }

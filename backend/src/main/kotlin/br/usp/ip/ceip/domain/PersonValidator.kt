@@ -30,7 +30,7 @@ class PersonValidator(
                 }
             }
 
-            "UNDO" -> {
+            "Não Documentado" -> {
                 return
             }
 
