@@ -54,7 +54,9 @@ fun Application.module() {
     val credentialRepository = CredentialRepositoryImpl()
     val personRepository = PersonRepositoryImpl()
 
-    val personValidator = PersonValidator(personRepository)
+    val documentValidator = DocumentValidator()
+    val shotDateValidator = ShotDateValidator()
+    val personValidator = PersonValidator(personRepository, documentValidator, shotDateValidator)
 
     val authController = AuthController(tokenManager, credentialRepository)
     val personController = PersonController(personRepository, personValidator)
