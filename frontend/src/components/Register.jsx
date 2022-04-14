@@ -13,6 +13,12 @@ function translateError(err) {
   if (/document.+already in use/.test(err))
     return "Documento já está cadastrado"
 
+  if (/invalid document value/.test(err))
+    return "Número de Documento inválido"
+
+  if (/invalid date/.test(err))
+    return "Data de vacinação inválida"
+
   return "Os dados fornecidos são inválidos"
 }
 
@@ -28,8 +34,14 @@ const Register = () => {
     UNDOC = "Não Documentado"
   const docTypes = [RG, CPF, UNDOC]
 
+  const USER_ROLE = "Usuário ou Acompanhante"
+  const roleMapper = {}
+  roleMapper[USER_ROLE] = "UserOrCompanion"
+  const roles = [USER_ROLE]
+
+  const [role, setRole] = useState(USER_ROLE)
   const [name, setName] = useState('')
-  const [docType, setDocType] = useState('RG')
+  const [docType, setDocType] = useState(RG)
   const [doc, setDoc] = useState('')
   const [shotDate, setShotDate] = useState(new Date())
 
@@ -60,12 +72,10 @@ const Register = () => {
 
     try {
       setIsSubmitting(true)
-      await axios.post("/register", JSON.stringify(body))
+      const { data: { user } } = await axios.post("/register", JSON.stringify(body))
       setPerson({
-        id: 1,                    // TODO: hardcoded - remove
-        ...body,
-        role: "UserOrCompanion",  // TODO: hardcoded - remove
-        services: ["APOIAR"]      // TODO: hardcoded - remove
+        ...user,
+        role: roleMapper[role]
       })
       setIsSubmitting(false)
       navigate("/perfil", { from: location })
@@ -99,6 +109,15 @@ const Register = () => {
         hasError &&
         <p className="error">{errMsg}</p>
       }
+
+      <select
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+      >
+        {roles.map((type) => (
+          <option key={type} value={type}>{type}</option>
+        ))}
+      </select>
 
       <input
         type="text"
