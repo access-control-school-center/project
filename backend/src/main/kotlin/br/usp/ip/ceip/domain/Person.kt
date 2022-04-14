@@ -1,14 +1,11 @@
 package br.usp.ip.ceip.domain
 
 import java.time.LocalDate
-import kotlinx.serialization.Serializable
 
-@Serializable
-data class Person(
-    val name: String,
-    val documentType: String,
-    val documentValue: String,
-    @Serializable(with = LocalDateSerializer::class)
-    val shotDate: LocalDate,
-    val id: CEIPID? = null,
-)
+sealed class Person() {
+    abstract val name: String
+    abstract val documentType: String
+    abstract val documentValue: String
+    abstract val shotDate: LocalDate
+    abstract val id: CEIPID?
+}

@@ -8,17 +8,17 @@ class PersonController(
     private val personRepository: PersonRepository,
     private val personValidator: PersonValidator
 ) {
-    fun register(person: Person): ControllerResult<Any> {
+    fun register(user: User): ControllerResult<Any> {
         try {
-            val registeredPerson = register(
-                person,
+            val registeredUser = register(
+                user,
                 personRepository,
                 personValidator
             )
 
             return ControllerResult (
                 httpStatus = HttpStatusCode.OK,
-                message = mapOf("person" to registeredPerson)
+                message = mapOf("user" to registeredUser)
             )
         } catch (e: ValidationException) {
             return ControllerResult (

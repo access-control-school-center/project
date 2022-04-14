@@ -1,10 +1,10 @@
 package br.usp.ip.ceip.domain
 
 fun register(
-    person: Person,
+    user: User,
     personRepository: PersonRepository,
     personValidator: PersonValidator
-) : Person {
-    personValidator.validateCreation(person)
-    return personRepository.save(person)
+) : User {
+    personValidator.validateCreation(user)
+    return personRepository.save(user)
 }

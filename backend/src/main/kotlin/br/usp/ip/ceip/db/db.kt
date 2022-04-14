@@ -1,8 +1,6 @@
 package br.usp.ip.ceip.db
 
-import br.usp.ip.ceip.db.tables.Credentials
-import br.usp.ip.ceip.db.tables.People
-import br.usp.ip.ceip.db.tables.RefreshTokens
+import br.usp.ip.ceip.db.tables.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.StdOutSqlLogger
@@ -24,5 +22,7 @@ fun setupDatabase(
         SchemaUtils.create(Credentials)
         SchemaUtils.create(RefreshTokens)
         SchemaUtils.create(People)
+        SchemaUtils.create(Users)
+        SchemaUtils.create(UserServices)
     }
 }

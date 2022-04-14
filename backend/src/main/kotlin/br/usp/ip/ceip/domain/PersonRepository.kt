@@ -39,10 +39,10 @@ interface PersonRepository {
     fun findByName(name: String): List<Person>
 
     /**
-     * Saves one person to the repository and gives it a unique ID
+     * Saves one user to the repository and gives it a unique ID
      *
-     * @param person: Person - the representation of the person to be added
-     * @return the person saved, with a unique ID
+     * @param user: User - the representation of the User to be added
+     * @return the user saved, with a unique ID
      */
-    fun save(person: Person): Person
+    fun save(user: User): User
 }

@@ -5,13 +5,17 @@ import br.usp.ip.ceip.db.tables.People.documentType
 import br.usp.ip.ceip.db.tables.People.documentValue
 import br.usp.ip.ceip.db.tables.People.name
 import br.usp.ip.ceip.db.tables.People.shotDate
+import br.usp.ip.ceip.db.tables.UserServices
+import br.usp.ip.ceip.db.tables.Users
 import br.usp.ip.ceip.domain.CEIPID
 import br.usp.ip.ceip.domain.Person
 import br.usp.ip.ceip.domain.PersonRepository
+import br.usp.ip.ceip.domain.User
 import br.usp.ip.ceip.domain.exceptions.PersonNotFoundException
 import br.usp.ip.ceip.utils.dateStringToLocalDate
 import br.usp.ip.ceip.utils.dateToString
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -19,11 +23,11 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class PersonRepositoryImpl : PersonRepository {
     override fun findOneByRG(rg: String): Person {
         val people = transaction {
-            People
+            val people = People
                 .select { documentType eq "RG" and (documentValue eq rg) }
                 .limit(1)
                 .map {
-                    Person(
+                    User(
                         name = it[name],
                         documentType = it[documentType],
                         documentValue = it[documentValue],
@@ -31,6 +35,29 @@ class PersonRepositoryImpl : PersonRepository {
                         id = CEIPID.fromInt(it[People.id].value)
                     )
                 }
+
+            if (people.isNotEmpty()) {
+                val person = people[0]
+
+                val services = (Users innerJoin UserServices)
+                    .slice(UserServices.name)
+                    .select { Users.personId eq person.id!!.toInt() }
+                    .map { it[name] }
+                    .toSet()
+
+                listOf(
+                    User(
+                        name = person.name,
+                        documentType = person.documentType,
+                        documentValue = person.documentValue,
+                        shotDate = person.shotDate,
+                        id = person.id,
+                        services = services
+                    )
+                )
+            } else {
+                listOf()
+            }
         }
 
         if (people.isEmpty()) {
@@ -42,11 +69,11 @@ class PersonRepositoryImpl : PersonRepository {
 
     override fun findOneByCPF(cpf: String): Person {
         val people = transaction {
-            People
+            val people = People
                 .select { documentType eq "CPF" and (documentValue eq cpf) }
                 .limit(1)
                 .map {
-                    Person(
+                    User(
                         name = it[name],
                         documentType = it[documentType],
                         documentValue = it[documentValue],
@@ -54,6 +81,29 @@ class PersonRepositoryImpl : PersonRepository {
                         id = CEIPID.fromInt(it[People.id].value)
                     )
                 }
+
+            if (people.isNotEmpty()) {
+                val person = people[0]
+
+                val services = (Users innerJoin UserServices)
+                    .slice(UserServices.name)
+                    .select { Users.personId eq person.id!!.toInt() }
+                    .map { it[name] }
+                    .toSet()
+
+                listOf(
+                    User(
+                        name = person.name,
+                        documentType = person.documentType,
+                        documentValue = person.documentValue,
+                        shotDate = person.shotDate,
+                        id = person.id,
+                        services = services
+                    )
+                )
+            } else {
+                listOf()
+            }
         }
 
         if (people.isEmpty()) {
@@ -67,11 +117,11 @@ class PersonRepositoryImpl : PersonRepository {
         val intID = CEIPID.fromHexString(id).toInt()
 
         val people = transaction {
-            People
+            val people = People
                 .select { People.id eq intID }
                 .limit(1)
                 .map {
-                    Person(
+                    User(
                         name = it[name],
                         documentType = it[documentType],
                         documentValue = it[documentValue],
@@ -79,6 +129,23 @@ class PersonRepositoryImpl : PersonRepository {
                         id = CEIPID.fromInt(it[People.id].value)
                     )
                 }
+
+            val person = people[0]
+
+            val services = (Users innerJoin UserServices)
+                .slice(UserServices.name)
+                .select { Users.personId eq person.id!!.toInt() }
+                .map { it[name] }
+                .toSet()
+
+            listOf(User(
+                name = person.name,
+                documentType = person.documentType,
+                documentValue = person.documentValue,
+                shotDate = person.shotDate,
+                id = person.id,
+                services = services
+            ))
         }
 
         if (people.isEmpty())
@@ -89,10 +156,10 @@ class PersonRepositoryImpl : PersonRepository {
 
     override fun findByName(name: String): List<Person> {
         return transaction {
-            People
+            val people = People
                 .select { People.name like "%$name%" }
                 .map {
-                    Person(
+                    User(
                         name = it[People.name],
                         documentType = it[documentType],
                         documentValue = it[documentValue],
@@ -100,31 +167,54 @@ class PersonRepositoryImpl : PersonRepository {
                         id = CEIPID.fromInt(it[People.id].value)
                     )
                 }
+
+            people.map { person ->
+                val services = (Users innerJoin UserServices)
+                    .slice(UserServices.name)
+                    .select { Users.personId eq person.id!!.toInt() }
+                    .map { it[People.name] }
+                    .toSet()
+
+                User(
+                    name = person.name,
+                    documentType = person.documentType,
+                    documentValue = person.documentValue,
+                    shotDate = person.shotDate,
+                    id = person.id,
+                    services = services
+                )
+            }
         }
     }
 
-    override fun save(person: Person): Person {
-        if (person.documentValue.isEmpty()) {
-            throw Exception("Invalid document value")
-        }
-
+    override fun save(user: User): User {
         val id = transaction {
-            People.insertAndGetId {
-                it[name] = person.name
-                it[documentType] = person.documentType
-                it[documentValue] = person.documentValue
-                it[shotDate] = dateToString(person.shotDate)
+            val pId = People.insertAndGetId {
+                it[name] = user.name
+                it[documentType] = user.documentType
+                it[documentValue] = user.documentValue
+                it[shotDate] = dateToString(user.shotDate)
             }
+
+            val uId = Users.insertAndGetId { it[personId] = pId }
+
+            user.services.forEach { svc ->
+                UserServices.insert {
+                    it[name] = svc
+                    it[userId] = uId
+                }
+            }
+
+            pId
         }
 
-        val (name, documentType, documentValue, shotDate) = person
-
-        return Person(
-            name = name,
-            documentType = documentType,
-            documentValue = documentValue,
-            shotDate = shotDate,
-            id = CEIPID.fromInt(id.value)
+        return User(
+            name = user.name,
+            documentType = user.documentType,
+            documentValue = user.documentValue,
+            shotDate = user.shotDate,
+            id = CEIPID.fromInt(id.value),
+            services = user.services
         )
     }
 }
