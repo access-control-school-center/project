@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
+import { RG, CPF } from '../utils/documents'
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import usePerson from '../hooks/usePerson'
 
-const CPF = "CPF",
-  ID_CEIP = "ID-CEIP",
+const ID_CEIP = "ID-CEIP",
   NOME = "Nome",
-  N_USP = "Nº USP",
-  RG = "RG"
+  N_USP = "Nº USP"
 
 function interpretRole(person) {
   const keys = Object.keys(person)
@@ -52,13 +51,13 @@ const Search = () => {
 
       case RG:
         return {
-          "document.type": "RG",
+          "document.type": RG,
           "document.value": given
         }
 
       default:
         return {
-          "document.type": "CPF",
+          "document.type": CPF,
           "document.value": given
         }
     }

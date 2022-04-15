@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import DatePicker from 'react-datepicker'
 import { useLocation, useNavigate } from "react-router-dom"
 
+import { RG, UNDOC, DOC_TYPES } from '../utils/documents'
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
 import usePerson from "../hooks/usePerson"
 
@@ -28,11 +29,6 @@ const Register = () => {
   const { setPerson } = usePerson()
   const location = useLocation()
   const navigate = useNavigate()
-
-  const RG = "RG",
-    CPF = "CPF",
-    UNDOC = "Não Documentado"
-  const docTypes = [RG, CPF, UNDOC]
 
   const USER_ROLE = "Usuário ou Acompanhante"
   const roleMapper = {}
@@ -130,7 +126,7 @@ const Register = () => {
         value={docType}
         onChange={(e) => setDocType(e.target.value)}
       >
-        {docTypes.map((type) => (
+        {DOC_TYPES.map((type) => (
           <option key={type} value={type}>{type}</option>
         ))}
       </select>
