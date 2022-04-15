@@ -1,24 +1,12 @@
+import { REPRESENTATION, REV_ROLES_REPRESENTATION } from '../utils/roles'
 import usePerson from '../hooks/usePerson'
 
-const USER = "UserOrCompanion",
-  EMPLOYEE = "Employee",
-  VOLUNTEER = "Volunteer"
-
 const translateRole = (role) => {
-  switch (role) {
-    case USER:
-      return "Usuário(a) / Acompanhante"
-
-    case EMPLOYEE:
-      return "Funcionário(a)"
-
-    default:
-      return "Voluntário(a)"
-  }
+  return REV_ROLES_REPRESENTATION[role]
 }
 
 const roleStyle = (role) => {
-  if (role === USER) return "user"
+  if (role === REPRESENTATION.USER) return "user"
 
   return role.toLowerCase()
 }
@@ -55,7 +43,7 @@ const PersonInfo = () => {
       <p>- Dados complementares</p>
 
       {
-        role === USER && (
+        role === REPRESENTATION.USER && (
           <li>
             <span className="font-bold">Serviços ou Laboratórios:</span> {services.join(', ')}
           </li>
@@ -63,7 +51,7 @@ const PersonInfo = () => {
       }
 
       {
-        role === EMPLOYEE && (
+        role === REPRESENTATION.EMPLOYEE && (
           <li>
             <span className="font-bold">Nº USP:</span> {credential.nusp}
           </li>
@@ -71,7 +59,7 @@ const PersonInfo = () => {
       }
 
       {
-        role === VOLUNTEER && (
+        role === REPRESENTATION.VOLUNTEER && (
           <>
             <li>
               <span className="font-bold">Responsável:</span> {responsible.name}

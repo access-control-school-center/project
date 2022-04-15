@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import { RG, CPF } from '../utils/documents'
+import { REPRESENTATION } from '../utils/roles'
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import usePerson from '../hooks/usePerson'
 
@@ -13,9 +14,9 @@ function interpretRole(person) {
   const keys = Object.keys(person)
 
   if (keys.includes("services"))
-    return "UserOrCompanion"
+    return REPRESENTATION.USER
 
-  return "Employee"
+  return REPRESENTATION.EMPLOYEE
 }
 
 const Search = () => {

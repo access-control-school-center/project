@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker'
 import { useLocation, useNavigate } from "react-router-dom"
 
 import { RG, UNDOC, DOC_TYPES } from '../utils/documents'
+import { ROLES, ROLES_LIST, ROLES_REPRESENTATION } from '../utils/roles'
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
 import usePerson from "../hooks/usePerson"
 
@@ -30,12 +31,7 @@ const Register = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const USER_ROLE = "Usuário ou Acompanhante"
-  const roleMapper = {}
-  roleMapper[USER_ROLE] = "UserOrCompanion"
-  const roles = [USER_ROLE]
-
-  const [role, setRole] = useState(USER_ROLE)
+  const [role, setRole] = useState(ROLES.USER)
   const [name, setName] = useState('')
   const [docType, setDocType] = useState(RG)
   const [doc, setDoc] = useState('')
@@ -71,7 +67,7 @@ const Register = () => {
       const { data: { user } } = await axios.post("/register", JSON.stringify(body))
       setPerson({
         ...user,
-        role: roleMapper[role]
+        role: ROLES_REPRESENTATION[role]
       })
       setIsSubmitting(false)
       navigate("/perfil", { from: location })
@@ -110,7 +106,7 @@ const Register = () => {
         value={role}
         onChange={(e) => setRole(e.target.value)}
       >
-        {roles.map((type) => (
+        {ROLES_LIST.map((type) => (
           <option key={type} value={type}>{type}</option>
         ))}
       </select>
