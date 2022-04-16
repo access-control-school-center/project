@@ -24,5 +24,6 @@ fun setupDatabase(
         SchemaUtils.create(People)
         SchemaUtils.create(Users)
         SchemaUtils.create(UserServices)
+        SchemaUtils.create(Employees)
     }
 }
