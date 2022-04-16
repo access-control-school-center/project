@@ -36,6 +36,8 @@ const Register = () => {
   const [docType, setDocType] = useState(RG)
   const [doc, setDoc] = useState('')
   const [shotDate, setShotDate] = useState(new Date())
+  const [nusp, setNusp] = useState('')
+  const [password, setPassword] = useState('')
 
   const [errMsg, setErrMsg] = useState('')
   const [hasError, setHasError] = useState(false)
@@ -48,23 +50,48 @@ const Register = () => {
   }, [errMsg])
 
   useEffect(() => {
-    const emptyForm = name.length === 0 && doc.length === 0
+    let emptyForm = true
+
+    if (role === ROLES.USER) {
+      emptyForm = name.length === 0 || doc.length === 0
+    } else if (role === ROLES.EMPLOYEE) {
+      emptyForm = name.length === 0 || doc.length === 0 || nusp.length === 0 || password.length === 0
+    }
+
     setDisabled(isSubmitting || emptyForm)
-  }, [name, doc, isSubmitting])
+  }, [role, name, doc, nusp, password, isSubmitting])
 
-  const handleRegistration = async () => {
-    if (disabled) return
+  const getUri = () => {
+    if (role === ROLES.EMPLOYEE) return "/employees"
+    return "/users"
+  }
 
-    const body = {
+  const buildBody = () => {
+    const base = {
       name,
       documentType: docType,
       documentValue: docType === UNDOC ? '' : doc,
       shotDate: formatDate(shotDate),
     }
 
+    if (role === ROLES.EMPLOYEE) {
+      base.credential = {
+        nusp, password
+      }
+    }
+
+    return base
+  }
+
+  const handleRegistration = async () => {
+    if (disabled) return
+
+    const body = buildBody()
+
     try {
       setIsSubmitting(true)
-      const { data: { user } } = await axios.post("/register", JSON.stringify(body))
+      const uri = getUri()
+      const { data: { user } } = await axios.post(uri, JSON.stringify(body))
       setPerson({
         ...user,
         role: ROLES_REPRESENTATION[role]
@@ -142,6 +169,30 @@ const Register = () => {
         onChange={(date) => setShotDate(date)}
         className="my-6 w-full"
       />
+
+      {
+        role === ROLES.EMPLOYEE &&
+        <>
+          <h3>Credenciais de Acesso</h3>
+          <p className="text-sm bg-green-300 px-2 py-1">
+            Permita o(a) funcionário(a) digitar suas próprias credenciais abaixo
+          </p>
+          <input
+            type="text"
+            placeholder="Nº USP"
+            value={nusp}
+            onChange={(e) => setNusp(e.target.value)}
+          />
+
+          <input
+            type="password"
+            placeholder="senha"
+            className="mb-8"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </>
+      }
 
       <button
         className={disabled ? "disabled" : ""}
