@@ -22,8 +22,8 @@ fun register(
     personRepository: PersonRepository,
     personValidator: PersonValidator
 ): Employee {
-    personValidator.validatePasswordStructure(password)
-    val credential = Credential(
+    personValidator.validateCredential(nusp, password)
+    val validCredential = Credential(
         nusp,
         passwordHash = BCrypt.withDefaults().hashToString(12, password.toCharArray())
     )
@@ -32,7 +32,7 @@ fun register(
         documentType,
         documentValue,
         shotDate,
-        credential = credential
+        credential = validCredential
     )
     personValidator.validateCreation(employee)
     return personRepository.save(employee)

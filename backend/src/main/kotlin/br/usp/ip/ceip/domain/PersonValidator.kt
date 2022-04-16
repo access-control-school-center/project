@@ -1,5 +1,6 @@
 package br.usp.ip.ceip.domain
 
+import br.usp.ip.ceip.domain.exceptions.CredentialNotFoundException
 import br.usp.ip.ceip.domain.exceptions.PersonNotFoundException
 import br.usp.ip.ceip.domain.exceptions.ValidationException
 
@@ -7,6 +8,7 @@ class PersonValidator(
     private val personRepository: PersonRepository,
     private val documentValidator: DocumentValidator,
     private val shotDateValidator: ShotDateValidator,
+    private val credentialRepository: CredentialRepository
 ) {
     private fun validateDocumentUniqueness(type: String, value: String) {
         when (type) {
@@ -44,8 +46,22 @@ class PersonValidator(
         shotDateValidator.validateShotDate(person)
     }
 
-    fun validatePasswordStructure(password: String) {
+    fun validateCredential(nusp: String, password: String) {
+        validateNuspUniqueness(nusp)
+        validatePasswordStructure(password)
+    }
+
+    private fun validatePasswordStructure(password: String) {
         val pwdRegex: Regex = "^[a-z0-9!@#$%&-_]{8,20}$".toRegex(RegexOption.IGNORE_CASE)
         if (!pwdRegex.matches(password)) throw ValidationException("Credential", "password", "malformed password")
+    }
+
+    private fun validateNuspUniqueness(nusp: String) {
+        try {
+            credentialRepository.findOneByNusp(nusp)
+            throw ValidationException("Credential", "nusp", "already in use")
+        } catch (e: CredentialNotFoundException) {
+            return
+        }
     }
 }
