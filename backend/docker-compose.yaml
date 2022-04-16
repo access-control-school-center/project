@@ -1,6 +1,15 @@
 version: '3.9'
 
 services:
+  ceip:
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - pgadmin
+    networks:
+        - ceip
+
   pg:
     image: postgres
     environment:
