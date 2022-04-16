@@ -3,6 +3,7 @@ package br.usp.ip.ceip.db
 import br.usp.ip.ceip.db.tables.Credentials
 import br.usp.ip.ceip.domain.Credential
 import br.usp.ip.ceip.domain.CredentialRepository
+import br.usp.ip.ceip.domain.exceptions.CredentialNotFoundException
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -24,7 +25,7 @@ class CredentialRepositoryImpl : CredentialRepository {
         }
 
         if (credentials.isEmpty())
-            throw Exception("Credential not found")
+            throw CredentialNotFoundException(nusp)
 
         return credentials[0]
     }
