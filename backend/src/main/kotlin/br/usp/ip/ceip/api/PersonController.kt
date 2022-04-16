@@ -55,7 +55,35 @@ class PersonController(
         }
     }
 
-    fun search(params: Parameters): ControllerResult<Any> {
+    fun searchUsers(params: Parameters): ControllerResult<Any> {
+        val sanitizedParams = sanitizeParams(params)
+
+        val users = searchUsers(
+            sanitizedParams,
+            personRepository
+        )
+
+        return ControllerResult(
+            httpStatus = HttpStatusCode.OK,
+            message = mapOf("users" to users)
+        )
+    }
+
+    fun searchEmployees(params: Parameters): ControllerResult<Any> {
+        val sanitizedParams = sanitizeParams(params)
+
+        val employees = searchEmployees(
+            sanitizedParams,
+            personRepository
+        )
+
+        return ControllerResult(
+            httpStatus = HttpStatusCode.OK,
+            message = mapOf("employees" to employees)
+        )
+    }
+
+    private fun sanitizeParams(params: Parameters): Map<Params, String?> {
         val sanitizedParams = mutableMapOf<Params, String?>()
 
         sanitizedParams[Params.DOC_TYPE] = params[Params.DOC_TYPE.key]
@@ -63,11 +91,6 @@ class PersonController(
         sanitizedParams[Params.NAME] = params[Params.NAME.key]
         sanitizedParams[Params.CEIPID] = params[Params.CEIPID.key]
 
-        val people = searchPeople(sanitizedParams, personRepository)
-
-        return ControllerResult(
-            httpStatus = HttpStatusCode.OK,
-            message = mapOf("people" to people)
-        )
+        return sanitizedParams
     }
 }

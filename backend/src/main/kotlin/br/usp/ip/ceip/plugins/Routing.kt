@@ -42,9 +42,15 @@ fun Application.configureRouting(authController: AuthController, personControlle
                 call.respond(httpStatus, message)
             }
 
-            get("/people") {
+            get("/users") {
                 val params = call.request.queryParameters
-                val (httpStatus, message) = personController.search(params)
+                val (httpStatus, message) = personController.searchUsers(params)
+                call.respond(httpStatus, message)
+            }
+
+            get("/employees") {
+                val params = call.request.queryParameters
+                val (httpStatus, message) = personController.searchEmployees(params)
                 call.respond(httpStatus, message)
             }
         }
