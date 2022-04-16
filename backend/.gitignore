@@ -1,6 +1,7 @@
 src/main/resources/application.dev-local
 src/main/resources/application.dev-docker
 src/main/resources/application.prod
+.env
 
 .DS_Store
 .idea/shelf
