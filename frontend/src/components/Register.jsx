@@ -21,6 +21,12 @@ function translateError(err) {
   if (/invalid date/.test(err))
     return "Data de vacinação inválida"
 
+  if (/malformed password/.test(err))
+    return "Senha entre 8 e 20 caractéres entre letras (A-Z, a-z), números e caractéres especiais ! @ # $ % & - _"
+
+  if (/nusp.+already in use/.test(err))
+    return "Nº USP já está cadastrado"
+
   return "Os dados fornecidos são inválidos"
 }
 
