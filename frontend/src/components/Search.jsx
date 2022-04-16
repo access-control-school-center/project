@@ -2,13 +2,22 @@ import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import { RG, CPF } from '../utils/documents'
-import { REPRESENTATION } from '../utils/roles'
+import { REPRESENTATION, ROLES, ROLES_LIST } from '../utils/roles'
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import usePerson from '../hooks/usePerson'
 
 const ID_CEIP = "ID-CEIP",
   NOME = "Nome",
   N_USP = "Nº USP"
+
+function getUri(role) {
+  if (role === ROLES.EMPLOYEE) return "/employees"
+  return "/users"
+}
+
+function getResponseKeyName(role) {
+  return role === ROLES.EMPLOYEE ? "employees" : "users"
+}
 
 function interpretRole(person) {
   const keys = Object.keys(person)
@@ -29,6 +38,7 @@ const Search = () => {
     CPF, ID_CEIP, NOME, N_USP, RG
   ]
 
+  const [role, setRole] = useState(ROLES.USER)
   const [selectedFilter, setSelectedFilter] = useState('ID-CEIP')
   const [given, setGiven] = useState('')
   const [people, setPeople] = useState([])
@@ -73,11 +83,12 @@ const Search = () => {
       setSubmitted(true)
       setSelectedFilterCopy(selectedFilter)
       setGivenCopy(given)
-      const response = await axios.get("/people", {
+      const uri = getUri(role)
+      const response = await axios.get(uri, {
         params: buildParams()
       })
 
-      setPeople(response.data.people)
+      setPeople(response.data[getResponseKeyName(role)])
     } catch (err) {
       console.log(err)
       setPeople([])
@@ -108,6 +119,16 @@ const Search = () => {
   return (
     <section className="card">
       <h2>Busca</h2>
+
+      <select
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+        required
+      >
+        {ROLES_LIST.map((r) => (
+          <option key={r} value={r}>{r}</option>
+        ))}
+      </select>
 
       <select
         value={selectedFilter}
