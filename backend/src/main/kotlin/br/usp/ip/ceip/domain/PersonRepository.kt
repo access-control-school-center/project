@@ -44,5 +44,13 @@ interface PersonRepository {
      * @param user: User - the representation of the User to be added
      * @return the user saved, with a unique ID
      */
-    fun save(person: Person): Person
+    fun save(user: User): User
+
+    /**
+     * Saves one employee to the repository and gives it a unique ID
+     *
+     * @param employee: Employee - the representation of the Employee to be added
+     * @return the Employee saved, with a unique ID
+     */
+    fun save(employee: Employee): Employee
 }

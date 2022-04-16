@@ -1,16 +1,11 @@
 package br.usp.ip.ceip.db
 
-import br.usp.ip.ceip.db.tables.People
+import br.usp.ip.ceip.db.tables.*
 import br.usp.ip.ceip.db.tables.People.documentType
 import br.usp.ip.ceip.db.tables.People.documentValue
 import br.usp.ip.ceip.db.tables.People.name
 import br.usp.ip.ceip.db.tables.People.shotDate
-import br.usp.ip.ceip.db.tables.UserServices
-import br.usp.ip.ceip.db.tables.Users
-import br.usp.ip.ceip.domain.CEIPID
-import br.usp.ip.ceip.domain.Person
-import br.usp.ip.ceip.domain.PersonRepository
-import br.usp.ip.ceip.domain.User
+import br.usp.ip.ceip.domain.*
 import br.usp.ip.ceip.domain.exceptions.PersonNotFoundException
 import br.usp.ip.ceip.utils.dateStringToLocalDate
 import br.usp.ip.ceip.utils.dateToString
@@ -185,6 +180,38 @@ class PersonRepositoryImpl : PersonRepository {
                 )
             }
         }
+    }
+
+    override fun save(employee: Employee): Employee {
+        val id = transaction {
+            val cId = Credentials.insertAndGetId {
+                it[nusp] = employee.credential.nusp
+                it[passwordHash] = employee.credential.passwordHash
+            }
+
+            val pId = People.insertAndGetId {
+                it[name] = employee.name
+                it[documentType] = employee.documentType
+                it[documentValue] = employee.documentValue
+                it[shotDate] = dateToString(employee.shotDate)
+            }
+
+            Employees.insert {
+                it[personId] = pId
+                it[credentialId] = cId
+            }
+
+            pId
+        }
+
+        return Employee(
+            name = employee.name,
+            documentType = employee.documentType,
+            documentValue = employee.documentValue,
+            shotDate = employee.shotDate,
+            id = CEIPID.fromInt(id.value),
+            credential = employee.credential
+        )
     }
 
     override fun save(user: User): User {
