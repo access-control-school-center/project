@@ -2,6 +2,7 @@ package br.usp.ip.ceip.plugins
 
 import br.usp.ip.ceip.api.*
 import br.usp.ip.ceip.domain.User
+import br.usp.ip.ceip.domain.Employee
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.request.*
@@ -30,9 +31,15 @@ fun Application.configureRouting(authController: AuthController, personControlle
         }
 
         authenticate {
-            post("/register") {
+            post("/Users") {
                 val user = call.receive<User>()
                 val (httpStatus, message) = personController.register(user)
+                call.respond(httpStatus, message)
+            }
+
+            post("/Employees") {
+                val employee = call.receive<Employee>()
+                val (httpStatus, message) = personController.register(employee)
                 call.respond(httpStatus, message)
             }
 
