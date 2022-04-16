@@ -127,7 +127,7 @@ const Register = () => {
   }
 
   return (
-    <section className="card -mt-10">
+    <section className="card -mt-10 max-h-3/4 overflow-hidden overflow-y-auto">
       <h2>Cadastro</h2>
 
       {

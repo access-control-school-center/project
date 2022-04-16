@@ -3,7 +3,11 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      spacing: {
+        '3/4': '75%'
+      }
+    },
   },
   plugins: [
     require("@tailwindcss/forms")({
