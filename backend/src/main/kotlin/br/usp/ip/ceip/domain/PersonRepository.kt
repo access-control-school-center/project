@@ -12,6 +12,10 @@ interface PersonRepository {
      */
     fun findOneByRG(rg: String): Person
 
+    fun findOneEmployeeByRG(rg: String): Employee
+
+    fun findOneUserByRG(rg: String): User
+
     /**
      * Finds a person by document type CPF
      *
@@ -20,6 +24,10 @@ interface PersonRepository {
      * @return the person found
      */
     fun findOneByCPF(cpf: String): Person
+
+    fun findOneEmployeeByCPF(cpf: String): Employee
+
+    fun findOneUserByCPF(cpf: String): User
 
     /**
      * Finds a person by CEIP-ID
@@ -30,6 +38,10 @@ interface PersonRepository {
      */
     fun findOneById(id: String): Person
 
+    fun findOneEmployeeById(id: String): Employee
+
+    fun findOneUserById(id: String): User
+
     /**
      * Finds a list of people by name
      *
@@ -37,6 +49,10 @@ interface PersonRepository {
      * @return a list with all matches
      */
     fun findByName(name: String): List<Person>
+
+    fun findUsersByName(name: String): List<User>
+
+    fun findEmployeesByName(name: String): List<Employee>
 
     /**
      * Saves one user to the repository and gives it a unique ID

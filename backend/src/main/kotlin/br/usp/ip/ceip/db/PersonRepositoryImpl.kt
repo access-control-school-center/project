@@ -16,9 +16,38 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class PersonRepositoryImpl : PersonRepository {
-    override fun findOneByRG(rg: String): Person {
+    override fun findOneByRG(rg: String) = try {
+        findOneUserByRG(rg)
+    } catch (e: PersonNotFoundException) {
+        findOneEmployeeByRG(rg)
+    }
+
+    override fun findOneEmployeeByRG(rg: String): Employee {
         val people = transaction {
-            val people = People
+            ((People innerJoin Employees) innerJoin Credentials)
+                .slice(People.id, name, documentType, documentValue, shotDate, Credentials.nusp, Credentials.passwordHash)
+                .select { documentType eq "RG" and (documentValue eq rg) }
+                .map {
+                    Employee(
+                        name = it[name],
+                        documentType = it[documentType],
+                        documentValue = it[documentValue],
+                        shotDate = dateStringToLocalDate(it[shotDate]),
+                        id = CEIPID.fromInt(it[People.id].value),
+                        credential = Credential(nusp = it[Credentials.nusp], passwordHash = it[Credentials.passwordHash])
+                    )
+                }
+        }
+
+        if (people.isEmpty())
+            throw PersonNotFoundException("RG", rg)
+
+        return people[0]
+    }
+
+    override fun findOneUserByRG(rg: String): User {
+        val people = transaction {
+            val people = (People innerJoin Users)
                 .select { documentType eq "RG" and (documentValue eq rg) }
                 .limit(1)
                 .map {
@@ -62,9 +91,38 @@ class PersonRepositoryImpl : PersonRepository {
         return people[0]
     }
 
-    override fun findOneByCPF(cpf: String): Person {
+    override fun findOneByCPF(cpf: String) = try {
+        findOneUserByCPF(cpf)
+    } catch (e: PersonNotFoundException) {
+        findOneEmployeeByCPF(cpf)
+    }
+
+    override fun findOneEmployeeByCPF(cpf: String): Employee {
         val people = transaction {
-            val people = People
+            ((People innerJoin Employees) innerJoin Credentials)
+                .slice(People.id, name, documentType, documentValue, shotDate, Credentials.nusp, Credentials.passwordHash)
+                .select { documentType eq "CPF" and (documentValue eq cpf) }
+                .map {
+                    Employee(
+                        name = it[name],
+                        documentType = it[documentType],
+                        documentValue = it[documentValue],
+                        shotDate = dateStringToLocalDate(it[shotDate]),
+                        id = CEIPID.fromInt(it[People.id].value),
+                        credential = Credential(nusp = it[Credentials.nusp], passwordHash = it[Credentials.passwordHash])
+                    )
+                }
+        }
+
+        if (people.isEmpty())
+            throw PersonNotFoundException("CPF", cpf)
+
+        return people[0]
+    }
+
+    override fun findOneUserByCPF(cpf: String): User {
+        val people = transaction {
+            val people = (People innerJoin Users)
                 .select { documentType eq "CPF" and (documentValue eq cpf) }
                 .limit(1)
                 .map {
@@ -108,11 +166,42 @@ class PersonRepositoryImpl : PersonRepository {
         return people[0]
     }
 
-    override fun findOneById(id: String): Person {
+    override fun findOneById(id: String) = try {
+        findOneUserById(id)
+    } catch (e: PersonNotFoundException) {
+        findOneEmployeeById(id)
+    }
+
+    override fun findOneEmployeeById(id: String): Employee {
         val intID = CEIPID.fromHexString(id).toInt()
 
         val people = transaction {
-            val people = People
+            ((People innerJoin Employees) innerJoin Credentials)
+                .slice(People.id, name, documentType, documentValue, shotDate, Credentials.nusp, Credentials.passwordHash)
+                .select { People.id eq intID }
+                .map {
+                    Employee(
+                        name = it[name],
+                        documentType = it[documentType],
+                        documentValue = it[documentValue],
+                        shotDate = dateStringToLocalDate(it[shotDate]),
+                        id = CEIPID.fromInt(it[People.id].value),
+                        credential = Credential(nusp = it[Credentials.nusp], passwordHash = it[Credentials.passwordHash])
+                    )
+                }
+        }
+
+        if (people.isEmpty())
+            throw PersonNotFoundException("CEIPID", id)
+
+        return people[0]
+    }
+
+    override fun findOneUserById(id: String): User {
+        val intID = CEIPID.fromHexString(id).toInt()
+
+        val people = transaction {
+            val people = (People innerJoin Users)
                 .select { People.id eq intID }
                 .limit(1)
                 .map {
@@ -149,9 +238,11 @@ class PersonRepositoryImpl : PersonRepository {
         return people[0]
     }
 
-    override fun findByName(name: String): List<Person> {
+    override fun findByName(name: String) = findUsersByName(name) + findEmployeesByName(name)
+
+    override fun findUsersByName(name: String): List<User> {
         return transaction {
-            val people = People
+            val people = (People innerJoin Users)
                 .select { People.name like "%$name%" }
                 .map {
                     User(
@@ -167,7 +258,7 @@ class PersonRepositoryImpl : PersonRepository {
                 val services = (Users innerJoin UserServices)
                     .slice(UserServices.name)
                     .select { Users.personId eq person.id!!.toInt() }
-                    .map { it[People.name] }
+                    .map { it[UserServices.name] }
                     .toSet()
 
                 User(
@@ -180,6 +271,22 @@ class PersonRepositoryImpl : PersonRepository {
                 )
             }
         }
+    }
+
+    override fun findEmployeesByName(name: String) = transaction {
+        ((People innerJoin Employees) innerJoin Credentials)
+            .slice(People.id, People.name, documentType, documentValue, shotDate, Credentials.nusp, Credentials.passwordHash)
+            .select { People.name like "%$name%" }
+            .map {
+                Employee(
+                    name = it[People.name],
+                    documentType = it[documentType],
+                    documentValue = it[documentValue],
+                    shotDate = dateStringToLocalDate(it[shotDate]),
+                    id = CEIPID.fromInt(it[People.id].value),
+                    credential = Credential(nusp = it[Credentials.nusp], passwordHash = it[Credentials.passwordHash])
+                )
+            }
     }
 
     override fun save(employee: Employee): Employee {
