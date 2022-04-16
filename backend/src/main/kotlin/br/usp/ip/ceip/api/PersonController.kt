@@ -8,22 +8,47 @@ class PersonController(
     private val personRepository: PersonRepository,
     private val personValidator: PersonValidator
 ) {
-    fun register(person: Person): ControllerResult<Any> {
-        val role: String = if (person is User) "user" else "employee"
-
-        try {
+    fun register(user: User): ControllerResult<Any> {
+        return try {
             val registered = register(
-                person,
+                user,
                 personRepository,
                 personValidator
             )
 
-            return ControllerResult (
+            ControllerResult (
                 httpStatus = HttpStatusCode.OK,
-                message = mapOf(role to registered)
+                message = mapOf("user" to registered)
             )
         } catch (e: ValidationException) {
-            return ControllerResult (
+            ControllerResult (
+                httpStatus = HttpStatusCode.BadRequest,
+                message = mapOf("error" to e.message!!)
+            )
+        }
+    }
+
+    fun register(employeeCreationPayload: EmployeeCreationPayload): ControllerResult<Any> {
+        val (name, documentType, documentValue, shotDate, credential) = employeeCreationPayload
+
+        return try {
+            val employee = register(
+                name,
+                documentType,
+                documentValue,
+                shotDate,
+                nusp = credential.nusp,
+                password = credential.password,
+                personRepository,
+                personValidator
+            )
+
+            ControllerResult(
+                httpStatus = HttpStatusCode.OK,
+                message = mapOf("employee" to employee)
+            )
+        } catch (e: ValidationException) {
+            ControllerResult(
                 httpStatus = HttpStatusCode.BadRequest,
                 message = mapOf("error" to e.message!!)
             )

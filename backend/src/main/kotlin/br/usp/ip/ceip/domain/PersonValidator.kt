@@ -43,4 +43,9 @@ class PersonValidator(
         documentValidator.validateDocument(person)
         shotDateValidator.validateShotDate(person)
     }
+
+    fun validatePasswordStructure(password: String) {
+        val pwdRegex: Regex = "^[a-z0-9!@#$%&-_]{8,20}$".toRegex(RegexOption.IGNORE_CASE)
+        if (!pwdRegex.matches(password)) throw ValidationException("Credential", "password", "malformed password")
+    }
 }
