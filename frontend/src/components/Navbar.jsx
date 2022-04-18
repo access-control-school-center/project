@@ -2,6 +2,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom'
 
 import useAuth from '../hooks/useAuth'
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
+import If from './If'
 
 const Navbar = () => {
   const location = useLocation()
@@ -32,29 +33,29 @@ const Navbar = () => {
 
       <h2>CEIP - Acesso</h2>
 
-      {isLogged &&
+      <If condition={isLogged}>
         <ul>
-          {location.pathname !== "/" &&
+          <If condition={location.pathname !== "/"}>
             <li>
               <Link to="/">Início</Link>
             </li>
-          }
+          </If>
 
-          {location.pathname !== "/cadastro" && location.pathname !== "/" &&
+          <If condition={location.pathname !== "/cadastro" && location.pathname !== "/"}>
             <li>
               <Link to="/cadastro">Cadastro</Link>
             </li>
-          }
+          </If>
 
-          {location.pathname !== "/busca" && location.pathname !== "/" &&
+          <If condition={location.pathname !== "/busca" && location.pathname !== "/"}>
             <li>
               <Link to="/busca">Busca</Link>
             </li>
-          }
+          </If>
 
           <li onClick={logout}>Sair</li>
         </ul>
-      }
+      </If>
 
     </nav>
   )

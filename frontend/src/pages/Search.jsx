@@ -5,6 +5,7 @@ import { RG, CPF } from '../utils/documents'
 import { REPRESENTATION, ROLES, ROLES_LIST } from '../utils/roles'
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import usePerson from '../hooks/usePerson'
+import If from "../components/If"
 
 const ID_CEIP = "ID-CEIP",
   NOME = "Nome",
@@ -158,33 +159,31 @@ const Search = () => {
         Buscar
       </button>
 
-      {
-        submitted && !emptyPeopleList &&
-        <>
-          <hr />
+      <If condition={submitted && !emptyPeopleList}>
+        <hr />
 
-          <h3>Resultado da busca</h3>
+        <h3>Resultado da busca</h3>
 
-          <ul>
-            {people.map(({ id, name }) => (
-              <li key={id}>
-                [{id}] <span className="underline text-blue-600" onClick={handleNavigation(id)}>{name}</span>
-              </li>
-            ))}
-          </ul>
-        </>
-      }
+        <ul>
+          {people.map(({ id, name }) => (
+            <li key={id}>
+              [{id}] <span className="underline text-blue-600" onClick={handleNavigation(id)}>{name}</span>
+            </li>
+          ))}
+        </ul>
+      </If>
 
-      {
-        submitted && emptyPeopleList &&
-        <>
-          <hr />
+      <If condition={submitted && emptyPeopleList}>
+        <hr />
 
-          <h3>Resultado da busca</h3>
+        <h3>Resultado da busca</h3>
 
-          <p>A busca por "<span className="italic">{selectedFilterCopy} = {givenCopy}</span>" não obteve resultados</p>
-        </>
-      }
+        <p>
+          A busca por "<span className="italic">
+            {selectedFilterCopy} = {givenCopy}
+          </span>" não obteve resultados
+        </p>
+      </If>
 
 
     </section>

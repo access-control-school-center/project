@@ -7,6 +7,7 @@ import { ROLES, ROLES_LIST, ROLES_REPRESENTATION } from '../utils/roles'
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
 import usePerson from "../hooks/usePerson"
 import FormErrorMessage from "../components/FormErrorMessage"
+import If from "../components/If"
 
 function formatDate(date) {
   return date.toLocaleDateString().replaceAll("/", "-")
@@ -153,14 +154,15 @@ const Register = () => {
         ))}
       </select>
 
-      {docType !== UNDOC &&
+      <If condition={docType !== UNDOC}>
         <input
           type="text"
           placeholder={"Número do " + (docType.length === 0 ? "Documento" : docType)}
           value={doc}
           onChange={(e) => setDoc(e.target.value)}
         />
-      }
+      </If>
+
 
       <DatePicker
         title="Data da última dose"
@@ -169,29 +171,28 @@ const Register = () => {
         className="my-6 w-full"
       />
 
-      {
-        role === ROLES.EMPLOYEE &&
-        <>
-          <h3>Credenciais de Acesso</h3>
-          <p className="text-sm bg-green-300 px-2 py-1">
-            Permita o(a) funcionário(a) digitar suas próprias credenciais abaixo
-          </p>
-          <input
-            type="text"
-            placeholder="Nº USP"
-            value={nusp}
-            onChange={(e) => setNusp(e.target.value)}
-          />
+      <If condition={role === ROLES.EMPLOYEE}>
+        <h3>Credenciais de Acesso</h3>
 
-          <input
-            type="password"
-            placeholder="senha"
-            className="mb-8"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </>
-      }
+        <p className="text-sm bg-green-300 px-2 py-1">
+          Permita o(a) funcionário(a) digitar suas próprias credenciais abaixo
+        </p>
+
+        <input
+          type="text"
+          placeholder="Nº USP"
+          value={nusp}
+          onChange={(e) => setNusp(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="senha"
+          className="mb-8"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </If>
 
       <button
         className={disabled ? "disabled" : ""}

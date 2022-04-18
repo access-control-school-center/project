@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import If from "./If"
 
 const FormErrorMessage = ({ message }) => {
   const [hasError, setHasError] = useState(message?.length > 0)
@@ -8,12 +9,9 @@ const FormErrorMessage = ({ message }) => {
   }, [message])
 
   return (
-    <>
-      {
-        hasError &&
-        <p className="error">{message}</p>
-      }
-    </>
+    <If condition={hasError}>
+      <p className="error">{message}</p>
+    </If>
   )
 }
 

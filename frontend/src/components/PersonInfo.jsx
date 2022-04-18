@@ -1,5 +1,6 @@
 import { REPRESENTATION, REV_ROLES_REPRESENTATION } from '../utils/roles'
 import usePerson from '../hooks/usePerson'
+import If from './If'
 
 const translateRole = (role) => {
   return REV_ROLES_REPRESENTATION[role]
@@ -42,34 +43,27 @@ const PersonInfo = () => {
 
       <p>- Dados complementares</p>
 
-      {
-        role === REPRESENTATION.USER && (
-          <li>
-            <span className="font-bold">Serviços ou Laboratórios:</span> {services.join(', ')}
-          </li>
-        )
-      }
+      <If condition={role === REPRESENTATION.USER}>
+        <li>
+          <span className="font-bold">Serviços ou Laboratórios:</span> {services.join(', ')}
+        </li>
 
-      {
-        role === REPRESENTATION.EMPLOYEE && (
-          <li>
-            <span className="font-bold">Nº USP:</span> {credential.nusp}
-          </li>
-        )
-      }
+      </If>
 
-      {
-        role === REPRESENTATION.VOLUNTEER && (
-          <>
-            <li>
-              <span className="font-bold">Responsável:</span> {responsible.name}
-            </li>
-            <li>
-              <span className="font-bold">Serviço:</span> {responsible.service}
-            </li>
-          </>
-        )
-      }
+      <If condition={role === REPRESENTATION.EMPLOYEE}>
+        <li>
+          <span className="font-bold">Nº USP:</span> {credential.nusp}
+        </li>
+      </If>
+
+      <If condition={role === REPRESENTATION.VOLUNTEER}>
+        <li>
+          <span className="font-bold">Responsável:</span> {responsible.name}
+        </li>
+        <li>
+          <span className="font-bold">Serviço:</span> {responsible.service}
+        </li>
+      </If>
 
     </ul>
   </>)
