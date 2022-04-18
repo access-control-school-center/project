@@ -6,6 +6,7 @@ import { REPRESENTATION, ROLES, ROLES_LIST } from '../utils/roles'
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import usePerson from '../hooks/usePerson'
 import If from "../components/If"
+import SelectAmong from "../components/SelectAmong"
 
 const ID_CEIP = "ID-CEIP",
   NOME = "Nome",
@@ -121,25 +122,17 @@ const Search = () => {
     <section className="card">
       <h2>Busca</h2>
 
-      <select
+      <SelectAmong
+        options={ROLES_LIST}
         value={role}
         onChange={(e) => setRole(e.target.value)}
-        required
-      >
-        {ROLES_LIST.map((r) => (
-          <option key={r} value={r}>{r}</option>
-        ))}
-      </select>
+      />
 
-      <select
+      <SelectAmong
+        options={possibleFilters}
         value={selectedFilter}
         onChange={(e) => setSelectedFilter(e.target.value)}
-        required
-      >
-        {possibleFilters.map((filter) => (
-          <option key={filter} value={filter}>{filter}</option>
-        ))}
-      </select>
+      />
 
       <input
         type="text"

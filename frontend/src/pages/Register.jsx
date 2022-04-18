@@ -8,6 +8,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate"
 import usePerson from "../hooks/usePerson"
 import FormErrorMessage from "../components/FormErrorMessage"
 import If from "../components/If"
+import SelectAmong from "../components/SelectAmong"
 
 function formatDate(date) {
   return date.toLocaleDateString().replaceAll("/", "-")
@@ -129,14 +130,11 @@ const Register = () => {
 
       <FormErrorMessage message={errMsg} />
 
-      <select
+      <SelectAmong
+        options={ROLES_LIST}
         value={role}
         onChange={(e) => setRole(e.target.value)}
-      >
-        {ROLES_LIST.map((type) => (
-          <option key={type} value={type}>{type}</option>
-        ))}
-      </select>
+      />
 
       <input
         type="text"
@@ -145,14 +143,11 @@ const Register = () => {
         onChange={(e) => setName(e.target.value)}
       />
 
-      <select
+      <SelectAmong
+        options={DOC_TYPES}
         value={docType}
         onChange={(e) => setDocType(e.target.value)}
-      >
-        {DOC_TYPES.map((type) => (
-          <option key={type} value={type}>{type}</option>
-        ))}
-      </select>
+      />
 
       <If condition={docType !== UNDOC}>
         <input
