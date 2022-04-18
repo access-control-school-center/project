@@ -1,16 +1,19 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import './App.css';
-import Login from './components/Login'
-import Home from './components/Home'
-import Register from './components/Register';
-import User from './components/User';
-import AuthRequired from './components/AuthRequired';
-import Layout from './components/Layout';
-import Search from './components/Search';
+
 import { PersonProvider } from './contexts/Person'
+
+import Layout from './components/Layout';
+import AuthRequired from './components/AuthRequired';
 import PersonRequired from './components/PersonRequired';
-import NotFound from './components/NotFound';
+
+import Login from './pages/Login'
+import Home from './pages/Home'
+import Register from './pages/Register';
+import Search from './pages/Search';
+import User from './pages/User';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (

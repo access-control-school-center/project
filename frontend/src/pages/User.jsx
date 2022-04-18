@@ -1,4 +1,4 @@
-import PersonInfo from "./PersonInfo"
+import PersonInfo from "../components/PersonInfo"
 
 const User = () => {
   return (
