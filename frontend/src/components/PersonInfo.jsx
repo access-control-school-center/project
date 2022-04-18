@@ -1,6 +1,7 @@
 import { REPRESENTATION, REV_ROLES_REPRESENTATION } from '../utils/roles'
 import usePerson from '../hooks/usePerson'
 import If from './If'
+import tagPDF from '../utils/tagPDF'
 
 const translateRole = (role) => {
   return REV_ROLES_REPRESENTATION[role]
@@ -45,27 +46,34 @@ const PersonInfo = () => {
 
       <If condition={role === REPRESENTATION.USER}>
         <li>
-          <span className="font-bold">Serviços ou Laboratórios:</span> {services.join(', ')}
+          <span className="font-bold">Serviços ou Laboratórios:</span> {services?.join(', ')}
         </li>
 
       </If>
 
       <If condition={role === REPRESENTATION.EMPLOYEE}>
         <li>
-          <span className="font-bold">Nº USP:</span> {credential.nusp}
+          <span className="font-bold">Nº USP:</span> {credential?.nusp}
         </li>
       </If>
 
       <If condition={role === REPRESENTATION.VOLUNTEER}>
         <li>
-          <span className="font-bold">Responsável:</span> {responsible.name}
+          <span className="font-bold">Responsável:</span> {responsible?.name}
         </li>
         <li>
-          <span className="font-bold">Serviço:</span> {responsible.service}
+          <span className="font-bold">Serviço:</span> {responsible?.service}
         </li>
       </If>
 
     </ul>
+
+    <button
+      className="mt-4"
+      onClick={() => tagPDF(person)}
+    >
+      Gerar Etiqueta
+    </button>
   </>)
 }
 
