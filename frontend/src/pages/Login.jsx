@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import axios from '../api/axios'
+import FormErrorMessage from "../components/FormErrorMessage"
 import useAuth from '../hooks/useAuth'
 
 const Login = () => {
@@ -15,7 +16,6 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [disabled, setDisabled] = useState(true)
   const [errMsg, setErrMsg] = useState('')
-  const [hasError, setHasError] = useState(false)
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -23,10 +23,6 @@ const Login = () => {
     const emptyForm = nusp.length === 0 || password.length === 0
     setDisabled(isSubmitting || emptyForm)
   }, [nusp, password, isSubmitting])
-
-  useEffect(() => {
-    setHasError(errMsg.length > 0)
-  }, [errMsg])
 
   const handleLogin = async () => {
     if (disabled) return
@@ -62,10 +58,7 @@ const Login = () => {
 
       <h2>Login</h2>
 
-      {
-        hasError &&
-        <p className="error">{errMsg}</p>
-      }
+      <FormErrorMessage message={errMsg} />
 
       <input
         type="text"

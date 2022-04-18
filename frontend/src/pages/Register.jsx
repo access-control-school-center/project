@@ -6,6 +6,7 @@ import { RG, UNDOC, DOC_TYPES } from '../utils/documents'
 import { ROLES, ROLES_LIST, ROLES_REPRESENTATION } from '../utils/roles'
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
 import usePerson from "../hooks/usePerson"
+import FormErrorMessage from "../components/FormErrorMessage"
 
 function formatDate(date) {
   return date.toLocaleDateString().replaceAll("/", "-")
@@ -46,14 +47,9 @@ const Register = () => {
   const [password, setPassword] = useState('')
 
   const [errMsg, setErrMsg] = useState('')
-  const [hasError, setHasError] = useState(false)
 
   const [disabled, setDisabled] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-  useEffect(() => {
-    setHasError(errMsg.length > 0)
-  }, [errMsg])
 
   useEffect(() => {
     let emptyForm = true
@@ -130,10 +126,7 @@ const Register = () => {
     <section className="card -mt-10 max-h-3/4 overflow-hidden overflow-y-auto">
       <h2>Cadastro</h2>
 
-      {
-        hasError &&
-        <p className="error">{errMsg}</p>
-      }
+      <FormErrorMessage message={errMsg} />
 
       <select
         value={role}
