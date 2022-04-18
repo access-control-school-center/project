@@ -9,7 +9,7 @@ FRONTEND_HOST_BIND=6070
 docker network create --attachable ${NETWORK_NAME}
 
 # run the database
-docker container run --name ceip-pg --network ${NETWORK_NAME} --hostname pg -v ${PWD}/data:/var/lib/postgresql/data --env-file ${PWD}/backend/.env -d postgres
+docker container run --name ceip-pg --network ${NETWORK_NAME} --hostname pg -v ${PWD}/data:/var/lib/postgresql/data -v ${PWD}/seeds.sql:/seeds.sql --env-file ${PWD}/backend/.env -d postgres
 
 # build the production images
 cp ${BACKEND_CONFIG_PATH}/application.prod ${BACKEND_CONFIG_PATH}/application.conf
