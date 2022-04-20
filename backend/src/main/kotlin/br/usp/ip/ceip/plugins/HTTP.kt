@@ -18,6 +18,6 @@ fun Application.configureHTTP(frontendUrl: String) {
         header(HttpHeaders.Authorization)
         header("MyCustomHeader")
         header(HttpHeaders.ContentType)
-        host(frontendUrl)
+        host(frontendUrl, schemes = listOf("http", "https"))
     }
 }
