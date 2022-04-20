@@ -25,4 +25,4 @@ COPY --from=builder /usr/src/app/build ./build
 
 EXPOSE 3000
 
-ENTRYPOINT caddy run --config ./Caddyfile
+ENTRYPOINT ["caddy", "run", "--config", "./Caddyfile"] 
