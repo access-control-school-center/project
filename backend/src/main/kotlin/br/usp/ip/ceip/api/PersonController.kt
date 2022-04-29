@@ -1,6 +1,7 @@
 package br.usp.ip.ceip.api
 
 import br.usp.ip.ceip.domain.*
+import br.usp.ip.ceip.domain.exceptions.PersonNotFoundException
 import br.usp.ip.ceip.domain.exceptions.ValidationException
 import io.ktor.http.*
 
@@ -92,5 +93,39 @@ class PersonController(
         sanitizedParams[Params.CEIPID] = params[Params.CEIPID.key]
 
         return sanitizedParams
+    }
+
+    fun updateEmployee(
+        id: String,
+        employeeUpdatePayload: EmployeeUpdatePayload
+    ) : ControllerResult<Any> {
+
+       return try {
+            val updated = update (
+                id,
+                employeeUpdatePayload,
+                personRepository,
+                personValidator
+            )
+
+           ControllerResult(
+               httpStatus = HttpStatusCode.OK,
+               message = mapOf("updatedEmployee" to updated)
+           )
+
+        }
+       catch (e: PersonNotFoundException) {
+            ControllerResult (
+                httpStatus = HttpStatusCode.BadRequest,
+                message = mapOf("error" to e.message!!)
+            )
+        }
+
+       catch (e: ValidationException) {
+           ControllerResult (
+               httpStatus = HttpStatusCode.BadRequest,
+               message = mapOf("error" to e.message!!)
+           )
+       }
     }
 }
