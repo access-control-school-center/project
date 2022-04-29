@@ -51,6 +51,20 @@ class PersonValidator(
         validatePasswordStructure(password)
     }
 
+    fun validateUpdate(previous: Employee, updated: Employee) {
+
+        if (previous.documentValue != updated.documentValue ||
+            previous.documentType !=  updated.documentType) {
+            documentValidator.validateDocument(updated)
+        }
+
+        if (previous.shotDate != updated.shotDate) shotDateValidator.validateShotDate(updated)
+
+        if (previous.credential != null) {
+            validateCredential(previous.credential.nusp, previous.credential.passwordHash)
+        }
+    }
+
     private fun validatePasswordStructure(password: String) {
         val pwdRegex: Regex = "^[a-z0-9!@#$%&-_]{8,20}$".toRegex(RegexOption.IGNORE_CASE)
         if (!pwdRegex.matches(password)) throw ValidationException("Credential", "password", "malformed password")
