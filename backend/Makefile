@@ -9,8 +9,7 @@ build_prod:
 infra:
 	docker-compose up pg pgadmin -d
 	@sleep 10
-	docker-compose exec pg psql -c "CREATE DATABASE \"ceip\";"
-	docker-compose exec pg psql -c "GRANT ALL PRIVILEGES ON DATABASE \"ceip\" TO root;"
+	docker-compose exec pg psql -U ceip -c "GRANT ALL PRIVILEGES ON DATABASE \"ceip\" TO ceip;"
 
 run:
 	docker-compose up -d
