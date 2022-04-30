@@ -290,6 +290,41 @@ class PersonRepositoryImpl : PersonRepository {
     }
 
     override fun save(employee: Employee): Employee {
+        return if (employee.id == null) store(employee)
+        else update(employee)
+    }
+
+    private fun update(employee: Employee): Employee {
+        transaction {
+            val cId = Credentials.insertAndGetId {
+                it[nusp] = employee.credential.nusp
+                it[passwordHash] = employee.credential.passwordHash
+            }
+
+            val pId = People.insertAndGetId {
+                it[name] = employee.name
+                it[documentType] = employee.documentType
+                it[documentValue] = employee.documentValue
+                it[shotDate] = dateToString(employee.shotDate)
+            }
+
+            Employees.insert {
+                it[personId] = pId
+                it[credentialId] = cId
+            }
+        }
+
+        return Employee(
+            name = employee.name,
+            documentType = employee.documentType,
+            documentValue = employee.documentValue,
+            shotDate = employee.shotDate,
+            id = employee.id,
+            credential = employee.credential
+        )
+    }
+
+    private fun store(employee: Employee): Employee {
         val id = transaction {
             val cId = Credentials.insertAndGetId {
                 it[nusp] = employee.credential.nusp
@@ -322,6 +357,40 @@ class PersonRepositoryImpl : PersonRepository {
     }
 
     override fun save(user: User): User {
+        return if (user.id == null) store(user)
+        else update(user)
+    }
+
+    private fun update(user: User): User {
+        transaction {
+            val pId = People.insertAndGetId {
+                it[name] = user.name
+                it[documentType] = user.documentType
+                it[documentValue] = user.documentValue
+                it[shotDate] = dateToString(user.shotDate)
+            }
+
+            val uId = Users.insertAndGetId { it[personId] = pId }
+
+            user.services.forEach { svc ->
+                UserServices.insert {
+                    it[name] = svc
+                    it[userId] = uId
+                }
+            }
+        }
+
+        return User(
+            name = user.name,
+            documentType = user.documentType,
+            documentValue = user.documentValue,
+            shotDate = user.shotDate,
+            id = user.id,
+            services = user.services
+        )
+    }
+
+    private fun store(user: User): User {
         val id = transaction {
             val pId = People.insertAndGetId {
                 it[name] = user.name
