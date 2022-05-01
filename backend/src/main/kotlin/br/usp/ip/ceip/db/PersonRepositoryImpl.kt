@@ -9,10 +9,7 @@ import br.usp.ip.ceip.domain.*
 import br.usp.ip.ceip.domain.exceptions.PersonNotFoundException
 import br.usp.ip.ceip.utils.dateStringToLocalDate
 import br.usp.ip.ceip.utils.dateToString
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class PersonRepositoryImpl : PersonRepository {
@@ -296,21 +293,21 @@ class PersonRepositoryImpl : PersonRepository {
 
     private fun update(employee: Employee): Employee {
         transaction {
-            val cId = Credentials.insertAndGetId {
-                it[nusp] = employee.credential.nusp
-                it[passwordHash] = employee.credential.passwordHash
-            }
-
-            val pId = People.insertAndGetId {
+            People.update({ People.id eq employee.id!!.toInt() }) {
                 it[name] = employee.name
                 it[documentType] = employee.documentType
                 it[documentValue] = employee.documentValue
                 it[shotDate] = dateToString(employee.shotDate)
             }
 
-            Employees.insert {
-                it[personId] = pId
-                it[credentialId] = cId
+            val credId = Employees
+                .select { Employees.personId eq employee.id!!.toInt() }
+                .map { it[Employees.credentialId] }
+                .get(0)
+
+            Credentials.update({ Credentials.id eq credId }) {
+                it[nusp] = employee.credential.nusp
+                it[passwordHash] = employee.credential.passwordHash
             }
         }
 
@@ -363,21 +360,30 @@ class PersonRepositoryImpl : PersonRepository {
 
     private fun update(user: User): User {
         transaction {
-            val pId = People.insertAndGetId {
+            People.update({ People.id eq user.id!!.toInt() }) {
                 it[name] = user.name
                 it[documentType] = user.documentType
                 it[documentValue] = user.documentValue
                 it[shotDate] = dateToString(user.shotDate)
             }
 
-            val uId = Users.insertAndGetId { it[personId] = pId }
+            val uId = Users
+                .select { Users.personId eq user.id!!.toInt() }
+                .map { it[Users.id] }
+                .get(0)
 
-            user.services.forEach { svc ->
-                UserServices.insert {
-                    it[name] = svc
-                    it[userId] = uId
+            val storedServices = UserServices
+                .select { UserServices.userId eq uId }
+                .map { it[UserServices.name] }
+
+            user.services
+                .filter { it !in storedServices }
+                .forEach { svc ->
+                    UserServices.insert {
+                        it[name] = svc
+                        it[userId] = uId
+                    }
                 }
-            }
         }
 
         return User(

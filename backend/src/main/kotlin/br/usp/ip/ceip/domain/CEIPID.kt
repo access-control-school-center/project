@@ -17,7 +17,6 @@ class CEIPID(val id: String) {
         }
     }
 
-    @Suppress("unused")
     fun toInt(): Int {
         val n = id.toInt(16)
 
