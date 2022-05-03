@@ -51,17 +51,31 @@ class PersonValidator(
         validatePasswordStructure(password)
     }
 
-    fun validateUpdate(previous: Employee, updated: Employee) {
+    // TODO: refactor to avoid duplication of information (newNUSP, newPassword, newPWHash)
+    fun validateUpdate(
+        previous: Employee,
+        updated: Employee,
+        newNUSP: String,
+        newPassword: String,
+        newPasswordHash: String
+    ) {
 
-        if (previous.documentValue != updated.documentValue ||
-            previous.documentType !=  updated.documentType) {
+        val changedType = previous.documentType != updated.documentType
+        val changedValue = previous.documentValue != updated.documentValue
+        val changedDocument = changedType || changedValue
+
+        if (changedDocument) {
             documentValidator.validateDocument(updated)
         }
 
         if (previous.shotDate != updated.shotDate) shotDateValidator.validateShotDate(updated)
 
-        if (previous.credential != null) {
-            validateCredential(previous.credential.nusp, previous.credential.passwordHash)
+        val changedNUSP = previous.credential.nusp != newNUSP
+        val changedPassword = previous.credential.passwordHash != newPasswordHash
+        val changedCredential = changedNUSP || changedPassword
+
+        if (changedCredential) {
+            validateCredential(newNUSP, newPassword)
         }
     }
 

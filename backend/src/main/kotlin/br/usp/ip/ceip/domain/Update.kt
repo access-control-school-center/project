@@ -5,7 +5,7 @@ import br.usp.ip.ceip.api.EmployeeUpdatePayload
 
 fun update (
     id: String,
-    employeeUpdatePayload: EmployeeUpdatePayload,
+    employeeUpdatePayload: EmployeeUpdatePayload, // TODO: refactor to avoid using external abstraction inside the domain
     personRepository: PersonRepository,
     personValidator: PersonValidator
 ) : Employee {
@@ -13,7 +13,7 @@ fun update (
     val previousEmployee = personRepository.findOneEmployeeById(id)
     val (name, documentType, documentValue, shotDate, credential) = employeeUpdatePayload
 
-
+    val passwordHash = BCrypt.withDefaults().hashToString(12, credential.password.toCharArray())
     val updatedEmployee = Employee (
         name,
         documentType,
@@ -22,10 +22,10 @@ fun update (
         CEIPID(id),
         Credential(
             nusp = credential.nusp,
-            passwordHash = BCrypt.withDefaults().hashToString(12, credential.password.toCharArray())
+            passwordHash = passwordHash
         )
     )
 
-    personValidator.validateUpdate(previousEmployee, updatedEmployee)
+    personValidator.validateUpdate(previousEmployee, updatedEmployee, credential.nusp, credential.password, passwordHash)
     return personRepository.save(updatedEmployee)
 }
