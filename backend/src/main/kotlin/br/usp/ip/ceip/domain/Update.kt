@@ -1,5 +1,6 @@
 package br.usp.ip.ceip.domain
 
+import at.favre.lib.crypto.bcrypt.BCrypt
 import br.usp.ip.ceip.api.EmployeeUpdatePayload
 
 fun update (
@@ -12,13 +13,17 @@ fun update (
     val previousEmployee = personRepository.findOneEmployeeById(id)
     val (name, documentType, documentValue, shotDate, credential) = employeeUpdatePayload
 
+
     val updatedEmployee = Employee (
         name,
         documentType,
         documentValue,
         shotDate,
         CEIPID(id),
-        credential
+        Credential(
+            nusp = credential.nusp,
+            passwordHash = BCrypt.withDefaults().hashToString(12, credential.password.toCharArray())
+        )
     )
 
     personValidator.validateUpdate(previousEmployee, updatedEmployee)

@@ -1,7 +1,6 @@
 package br.usp.ip.ceip.api
 
 import br.usp.ip.ceip.domain.LocalDateSerializer
-import br.usp.ip.ceip.domain.Credential
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
 
@@ -12,5 +11,5 @@ data class EmployeeUpdatePayload (
     val documentValue: String,
     @Serializable(with = LocalDateSerializer::class)
     val shotDate: LocalDate,
-    val credential: Credential
+    val credential: CredentialUpdatePayload
 )
