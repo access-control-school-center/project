@@ -95,13 +95,52 @@ class PersonController(
         return sanitizedParams
     }
 
+    fun updateUser(
+        id: String,
+        userUpdatePayload: UserUpdatePayload,
+    ) : ControllerResult<Any> {
+
+        val (name, documentType, documentValue, shotDate, services) = userUpdatePayload
+
+        return try {
+            val updated = updateUser (
+                id,
+                name,
+                documentType,
+                documentValue,
+                shotDate,
+                services,
+                personRepository,
+                personValidator
+            )
+
+            ControllerResult(
+                httpStatus = HttpStatusCode.OK,
+                message = mapOf("updatedEmployee" to updated)
+            )
+        }
+        catch (e: PersonNotFoundException) {
+            ControllerResult (
+                httpStatus = HttpStatusCode.BadRequest,
+                message = mapOf("error" to e.message!!)
+            )
+        }
+
+        catch (e: ValidationException) {
+            ControllerResult (
+                httpStatus = HttpStatusCode.BadRequest,
+                message = mapOf("error" to e.message!!)
+            )
+        }
+    }
+
     fun updateEmployee(
         id: String,
         employeeUpdatePayload: EmployeeUpdatePayload
     ) : ControllerResult<Any> {
 
        return try {
-            val updated = update (
+            val updated = updateEmployee (
                 id,
                 employeeUpdatePayload,
                 personRepository,
