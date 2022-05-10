@@ -54,6 +54,14 @@ fun Application.configureRouting(authController: AuthController, personControlle
                 call.respond(httpStatus, message)
             }
 
+            put("/users/{id}") {
+                val id = call.parameters["id"]
+                val updatedUser = call.receive<UserUpdatePayload>()
+                val (httpStatus, message) = personController.updateUser(id!!, updatedUser)
+                call.respond(httpStatus, message)
+
+            }
+
             put("/employees/{id}") {
                 val id = call.parameters["id"]
                 val updatedEmployee = call.receive<EmployeeUpdatePayload>()
