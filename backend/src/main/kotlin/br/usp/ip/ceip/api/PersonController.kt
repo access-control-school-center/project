@@ -7,7 +7,9 @@ import io.ktor.http.*
 
 class PersonController(
     private val personRepository: PersonRepository,
-    private val personValidator: PersonValidator
+    private val personValidator: PersonValidator,
+    private val userValidator: UserValidator,
+    private val employeeValidator: EmployeeValidator
 ) {
     fun register(user: User): ControllerResult<Any> {
         return try {
@@ -111,7 +113,7 @@ class PersonController(
                 shotDate,
                 services,
                 personRepository,
-                personValidator
+                userValidator
             )
 
             ControllerResult(
@@ -144,7 +146,7 @@ class PersonController(
                 id,
                 employeeUpdatePayload,
                 personRepository,
-                personValidator
+                employeeValidator
             )
 
            ControllerResult(
