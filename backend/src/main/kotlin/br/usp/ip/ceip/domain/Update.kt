@@ -12,7 +12,7 @@ fun updateUser (
     shotDate: LocalDate,
     services: Set<String>,
     personRepository: PersonRepository,
-    personValidator: PersonValidator
+    userValidator: UserValidator
 ) : User {
 
     val previousUser = personRepository.findOneUserById(id)
@@ -26,7 +26,7 @@ fun updateUser (
         services
     )
 
-    personValidator.validateUserUpdate(previousUser, updatedUser)
+    userValidator.validateUpdate(previousUser, updatedUser)
     return personRepository.save(updatedUser)
 
 }
@@ -36,7 +36,7 @@ fun updateEmployee (
     id: String,
     employeeUpdatePayload: EmployeeUpdatePayload, // TODO: refactor to avoid using external abstraction inside the domain
     personRepository: PersonRepository,
-    personValidator: PersonValidator
+    employeeValidator: EmployeeValidator
 ) : Employee {
 
     val previousEmployee = personRepository.findOneEmployeeById(id)
@@ -55,6 +55,6 @@ fun updateEmployee (
         )
     )
 
-    personValidator.validateEmployeeUpdate(previousEmployee, updatedEmployee, credential.nusp, credential.password, passwordHash)
+    employeeValidator.validateUpdate(previousEmployee, updatedEmployee, credential.nusp, credential.password, passwordHash)
     return personRepository.save(updatedEmployee)
 }
