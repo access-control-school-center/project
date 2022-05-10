@@ -46,13 +46,39 @@ class PersonValidator(
         shotDateValidator.validateShotDate(person)
     }
 
-    fun validateCredential(nusp: String, password: String) {
+    private fun validateServices(services: Set<String>) {
+        for (s in services) {
+            if (s.isEmpty()) {
+                throw ValidationException("User", "services", "invalid service (empty string)")
+            }
+        }
+    }
+
+    fun validateUserUpdate(
+        previous: User,
+        updated: User
+    ) {
+
+        val changedType = previous.documentType != updated.documentType
+        val changedValue = previous.documentValue != updated.documentValue
+        val changedDocument = changedType || changedValue
+
+        if (changedDocument) {
+            documentValidator.validateDocument(updated)
+        }
+
+        if (previous.shotDate != updated.shotDate) shotDateValidator.validateShotDate(updated)
+
+        validateServices(updated.services)
+    }
+
+    private fun validateCredential(nusp: String, password: String) {
         validateNuspUniqueness(nusp)
         validatePasswordStructure(password)
     }
 
     // TODO: refactor to avoid duplication of information (newNUSP, newPassword, newPWHash)
-    fun validateUpdate(
+    fun validateEmployeeUpdate(
         previous: Employee,
         updated: Employee,
         newNUSP: String,
